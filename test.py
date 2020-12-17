@@ -42,8 +42,6 @@ class reactor_ASM1:
         self.Ya = 0.24  #
         self.Ixp = 0.06  #
         self.t = [1, 2]
-        plt.style.use('fivethirtyeight')
-        index = count()
 
     def equation1(self, Xbh, t):
         DXbhDT = ((self.Uh * self.Ss) / (self.Ks + self.Ss)) * (
@@ -56,7 +54,7 @@ class reactor_ASM1:
     def equation2(self, Xba, t):
         DXbaDT = self.Ua * (self.Snh / (self.Knh + self.Snh)) * (
                 self.So / (self.Koa + self.So)) * self.Xba - self.Ba * self.Xba
-        return (DXbaDT)
+        return DXbaDT
 
     def equation3(self, Ss, t):
         DSsDT = ((-self.Uh / self.Yh) * (self.Ss / (self.Ks + self.Ss)) * (
@@ -65,25 +63,25 @@ class reactor_ASM1:
                          (self.Xs / self.Xbh) / (self.Kx + (self.Xs / self.Xbh))) * (
                          (self.So / (self.Koh + self.So)) + self.Nh * (self.Koh / (self.Koh + self.So)) * (
                          self.Sno / (self.Kno + self.Sno)))) * self.Xbh  # nie jestem pewny
-        return (DSsDT)
+        return DSsDT
 
     def equation4(self, Xs, t):
         DXsDT = (1 - self.Fp) * (self.Bh * self.Xbh + self.Ba * self.Xba) - self.Kh * (
                 (self.Xs / self.Xbh) / (self.Kx + (self.Xs / self.Xbh))) * (
                         (self.So / (self.Koh + self.So)) + self.Nh * (self.Koh / (self.Koh + self.So)) * (
                         self.Sno / (self.Kno + self.Sno))) * self.Xbh
-        return (DXsDT)
+        return DXsDT
 
     def equation5(self, Xp, t):
         DXpDT = self.Fp * (self.Bh * self.Xbh + self.Ba * self.Xba)
-        return (DXpDT)
+        return DXpDT
 
     def equation6(self, Xnd, t):
         DXndDT = (self.Ixb - self.Fp * self.Ixp) * (self.Bh * self.Xbh + self.Ba * self.Xba) - self.Kh * (
                 (self.Xnd / self.Xbh) / (self.Kx + (self.Xs / self.Bh))) * (
                          (self.So / (self.Koh + self.So)) + self.Nh * (self.Koh / (self.Koh + self.So)) * (
                          self.Sno / (self.Kno + self.Sno))) * self.Xbh  # poprawione
-        return (DXndDT)
+        return DXndDT
 
     def equation7(self, Snd, t):
         DSndDT = (-self.Ka * self.Snd + self.Kh * ((self.Xnd / self.Xbh) / (self.Kx + (self.Xs / self.Bh))) * (
@@ -97,7 +95,7 @@ class reactor_ASM1:
                 self.Sno / (self.Kno + self.Sno))) + self.Ka * self.Snd) * self.Xbh - self.Ua * (
                          self.Ixb + 1 / self.Ya) * (self.Snh / (self.Knh + self.Snh)) * (
                          self.So / (self.Koa + self.So)) * self.Xba
-        return (DSnhDT)
+        return DSnhDT
 
     def equation9(self, Sno, t):
         DSnoDT = -self.Uh * self.Ng * ((1 - self.Yh) / (2.86 * self.Yh)) * (self.Ss / (self.Ks + self.Ss)) * (
@@ -143,9 +141,10 @@ class reactor_ASM1:
         plt.tight_layout()
 
     def __iter__(self):
-        return self
+        return
 
     def __next__(self):
+        #reactor_ASM1().Xbh += 1
         self.Xbh = self.rownania()[0][-1,0]
         self.Xba = self.rownania()[1][-1,0]
         self.Ss = self.rownania()[2][-1,0]
@@ -160,13 +159,11 @@ class reactor_ASM1:
         return self.Xbh, self.Xba, self.Ss, self.Xs, self.Xp, self.Xnd, self.Snd, self.Snh, self.Sno, self.So
 
 
-#model = reactor_ASM1()
-#x = reactor_ASM1().graphs()
 
-#ani = FuncAnimation(plt.gcf(), x, interval=1000)
-
-#plt.tight_layout()
-#plt.show()
+# x = reactor_ASM1()
+# for i in range (20):
+#     print(next(x))
+#     print(x.Xbh)
 
 
 #model =  reactor_ASM1()

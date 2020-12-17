@@ -32,7 +32,7 @@ while True:
         So = next(model)[9]
         x1 = model.t[-1]
         x1 += 1
-        model.t.append(x1)
+        model.t[-1] = x1
 
 
         info = {
