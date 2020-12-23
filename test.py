@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import time
 from itertools import count
 import pandas as pd
-from matplotlib.animation import FuncAnimation
+import matplotlib.ticker as mticker
 
 
 class reactor_ASM1:
@@ -12,36 +12,36 @@ class reactor_ASM1:
     def __init__(self):
         self.Xbh = 0.1
         self.Xba = 0.1
-        self.Ss = 0.2
+        self.Ss = 0.32
         self.Xs = 0.1
         self.Xp = 0.2
         self.Xnd = 0.001
         self.Snd = 0.002
-        self.Snh = 0.004
+        self.Snh = 0.9
         self.Sno = 0.02
         self.So = 0.5
 
         #
-        self.Uh = 2  #
-        self.Ks = 20  #
-        self.Koh = 0.2  #
-        self.Ng = 0.8  #
-        self.Kno = 0.5  #
-        self.Bh = 0.4  #
-        self.Ua = 1  #
-        self.Knh = 0.01  #
-        self.Koa = 0.4  #
-        self.Ba = 0.15  #
-        self.Kh = 3  #
-        self.Yh = 0.54  #
-        self.Kx = 0.03  #
-        self.Nh = 0.4  #
+        self.Uh = 6.98  #
+        self.Ks = 0.3  #
+        self.Koh = 0.156  #
+        self.Ng = 0.5  #
+        self.Kno = 0.1  #
+        self.Bh = 0.62  #
+        self.Ua = 0.0676  #
+        self.Knh = 0.109  #
+        self.Koa = 0.25  #
+        self.Ba = 0.0289  #
+        self.Kh = 12.7  #
+        self.Yh = 0.666  #
+        self.Kx = 0.302  #
+        self.Nh = 0.192  #
         self.Fp = 0.08  #
-        self.Ixb = 0.086  #
-        self.Ka = 0.08  #
-        self.Ya = 0.24  #
-        self.Ixp = 0.06  #
-        self.t = [1, 2]
+        self.Ixb = 0.068  #
+        self.Ka = 25  #
+        self.Ya = 0.206  #
+        self.Ixp = 0.068  #
+        self.t = [0.0, 0.1]
 
     def equation1(self, Xbh, t):
         DXbhDT = ((self.Uh * self.Ss) / (self.Ks + self.Ss)) * (
@@ -62,7 +62,7 @@ class reactor_ASM1:
                 self.Sno / (self.Kno + self.Sno))) + self.Kh * (
                          (self.Xs / self.Xbh) / (self.Kx + (self.Xs / self.Xbh))) * (
                          (self.So / (self.Koh + self.So)) + self.Nh * (self.Koh / (self.Koh + self.So)) * (
-                         self.Sno / (self.Kno + self.Sno)))) * self.Xbh  # nie jestem pewny
+                         self.Sno / (self.Kno + self.Sno)))) * self.Xbh
         return DSsDT
 
     def equation4(self, Xs, t):
@@ -80,7 +80,7 @@ class reactor_ASM1:
         DXndDT = (self.Ixb - self.Fp * self.Ixp) * (self.Bh * self.Xbh + self.Ba * self.Xba) - self.Kh * (
                 (self.Xnd / self.Xbh) / (self.Kx + (self.Xs / self.Bh))) * (
                          (self.So / (self.Koh + self.So)) + self.Nh * (self.Koh / (self.Koh + self.So)) * (
-                         self.Sno / (self.Kno + self.Sno))) * self.Xbh  # poprawione
+                         self.Sno / (self.Kno + self.Sno))) * self.Xbh
         return DXndDT
 
     def equation7(self, Snd, t):
@@ -126,97 +126,62 @@ class reactor_ASM1:
         return self.Xbh1, self.Xba1, self.Ss1, self.Xs1, self.Xp1, self.Xnd1, self.Snd1, self.Snh1, self.Sno1, self.So1
 
     def graphs(i):
-
         data = pd.read_csv('data.csv')
         x = data['t']
         y1 = data['Xbh']
-        y2 = data['Xs']
+        y2 = data['Xba']
+        y3 = data['Ss']
+        y4 = data['Xs']
+        y5 = data['Xp']
+        y6 = data['Xnd']
+        y7 = data['Snd']
+        y8 = data['Snh']
+        y9 = data['Sno']
+        y10 = data['So']
 
         plt.cla()
-
-        plt.plot(x, y1, label='Channel 1')
-        plt.plot(x, y2, label='Channel 2')
-
+        plt.plot(x, y1, label='Xbh')
+        plt.plot(x, y2, label='Xba')
+        plt.plot(x, y3, label='Ss')
+        plt.plot(x, y4, label='Xs')
+        plt.plot(x, y5, label='Xp')
+        plt.plot(x, y6, label='Xnd')
+        plt.plot(x, y7, label='Snd')
+        plt.plot(x, y8, label='Snh')
+        plt.plot(x, y9, label='Sno')
+        plt.plot(x, y10, label='So')
         plt.legend(loc='upper left')
+        plt.gca().xaxis.set_major_locator(mticker.MaxNLocator())
         plt.tight_layout()
 
     def __iter__(self):
         return
 
     def __next__(self):
-        #reactor_ASM1().Xbh += 1
-        self.Xbh = self.rownania()[0][-1,0]
-        self.Xba = self.rownania()[1][-1,0]
-        self.Ss = self.rownania()[2][-1,0]
-        self.Xs = self.rownania()[3][-1,0]
-        self.Xp = self.rownania()[4][-1,0]
-        self.Xnd = self.rownania()[5][-1,0]
-        self.Snd = self.rownania()[6][-1,0]
-        self.Snh = self.rownania()[7][-1,0]
-        self.Sno = self.rownania()[8][-1,0]
-        self.So = self.rownania()[9][-1,0]
-
+        # self.Xbh += 1
+        self.Xbh = self.rownania()[0][-1, 0]
+        self.Xba = self.rownania()[1][-1, 0]
+        self.Ss = self.rownania()[2][-1, 0]
+        self.Xs = self.rownania()[3][-1, 0]
+        self.Xp = self.rownania()[4][-1, 0]
+        self.Xnd = self.rownania()[5][-1, 0]
+        self.Snd = self.rownania()[6][-1, 0]
+        # self.Snd += 0.05
+        self.Snh = self.rownania()[7][-1, 0]
+        self.Sno = self.rownania()[8][-1, 0]
+        self.So = self.rownania()[9][-1, 0]
+        # self.So += 0.00001
         return self.Xbh, self.Xba, self.Ss, self.Xs, self.Xp, self.Xnd, self.Snd, self.Snh, self.Sno, self.So
 
+# x = next(reactor_ASM1())
+# print(next(reactor_ASM1()))
+# print(x)
+# print(x[0])
 
+# x = reactor_ASM1().rownania()
+# x = float(x[1])
+# print(x)
 
 # x = reactor_ASM1()
 # for i in range (20):
 #     print(next(x))
-#     print(x.Xbh)
-
-
-#model =  reactor_ASM1()
-#x = model.rownania()[0:1]
-#x= model.rownania()[0][-1,0]
-#x= x[1,0]
-
-
-
-
-# x1 = x.rownania()[0]
-# t=10
-# x2 = next(x)[0]
-# print(x2)
-
-
-# for i in range(0,1):
-#    x2 = next(x)[2]
-#    print(x2)
-#    t = [1, 2,3]
-#    plt.plot(x2, t)
-#    plt.show()
-
-# y = time.gmtime()[5]
-# print(y)
-
-
-# print(next(x))
-
-# while True:
-#   try:
-#      item = next(x)
-#     print(item)
-#    print(item.rownania.self.Xbh)
-# plt.plot(item[0],item[1])
-# plt.show()
-# except StopIteration:
-#    break
-
-
-# x0 = [1e6, 9, 100]
-# t = np.linspace(0, 15, 1000)
-# x = odeint(equation1, x0, t)
-
-# a = x[0:, 0]
-# b = x[0:, 1]
-# c = x[0:, 2]
-
-# plt.semilogy(t, a)
-# plt.semilogy(t, b)
-# plt.semilogy(t, c)
-# plt.show()
-
-# for i in range(10000):
-#    self.t.append(time.gmtime()[5])
-#    time.sleep(1)
