@@ -9,8 +9,10 @@ import numpy as np
 
 model = reactor_ASM1()
 
+
 def exit_handler():
     os.remove("data.csv")
+
 
 def makesimulation():
     fieldnames = ["Xbh", "Xba", "Ss", "Xs", "Xp", "Xnd", "Snd", "Snh", "Sno", "So", "t"]
@@ -34,21 +36,19 @@ def makesimulation():
                 Sno = Step[8]
                 So = Step[9]
                 x1 = model.t[-1]
-                x1 += 0.10
-                x1=round(x1,1)
+                x1 += 0.1
+                x1 = round(x1, 1)
                 model.t[-1] = x1
 
                 x0 = model.t[0]
-                x0 += 0.10
-                x0=round(x0,1)
+                x0 += 0.1
+                x0 = round(x0, 1)
                 model.t[0] = x0
-
 
                 # x1 = model.t[-1]
                 # x1 += 0.1
                 # x1 = round(x1, 1)
                 # model.t.append(x1)
-
 
                 info = {
                     "Xbh": Xbh,
@@ -81,6 +81,5 @@ def makesimulation():
         # else:
         #     print("File Saved!")
         #     sys.exit()
-
 
 # makesimulation()
