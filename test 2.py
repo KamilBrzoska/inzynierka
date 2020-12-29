@@ -1,174 +1,147 @@
-import numpy as np
-from scipy.integrate import odeint
+from tkinter import *
+from test import reactor_ASM1
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import file_csv
+import _thread
 import matplotlib.pyplot as plt
-import time
-from itertools import count
-import pandas as pd
-import matplotlib.ticker as mticker
+from matplotlib.animation import FuncAnimation
+
+reactor = reactor_ASM1()
+
+# window = Tk()
+# window.title("Simulator")
 
 
-class reactor_ASM1:
+class Simulator:
+    def __init__(self, master):
+        self.master = master
+        master.title("Symulator")
 
-    def __init__(self):
-        self.Xbh = 0.1
-        self.Xba = 0.1
-        self.Ss = 0.32
-        self.Xs = 0.1
-        self.Xp = 0.2
-        self.Xnd = 0.001
-        self.Snd = 0.002
-        self.Snh = 0.9
-        self.Sno = 0.02
-        self.So = 0.5
+        # frame
+        main_frame = Frame(window, width=180, height=370, bg='grey')
+        main_frame.pack(side='left', fill = 'both', padx=10, pady=5, expand=True)
 
-        #
-        self.Uh = 6.98  #
-        self.Ks = 0.3  #
-        self.Koh = 0.156  #
-        self.Ng = 0.5  #
-        self.Kno = 0.1  #
-        self.Bh = 0.62  #
-        self.Ua = 0.0676  #
-        self.Knh = 0.109  #
-        self.Koa = 0.25  #
-        self.Ba = 0.0289  #
-        self.Kh = 12.7  #
-        self.Yh = 0.666  #
-        self.Kx = 0.302  #
-        self.Nh = 0.192  #
-        self.Fp = 0.08  #
-        self.Ixb = 0.068  #
-        self.Ka = 25  #
-        self.Ya = 0.206  #
-        self.Ixp = 0.068  #
-        self.t = [0.0, 0.1]
+        left_frame = Frame(main_frame, width=90, height=185, bg='grey')
+        left_frame.pack(side='left', fill='both', padx=10, pady=5, expand=True)
 
-    def equation1(self, Xbh, t):
-        DXbhDT = ((self.Uh * self.Ss) / (self.Ks + self.Ss)) * (
-                (self.Xbh * self.So) / (self.Koh + self.So)) + self.Ng * self.Uh * (
-                         self.Ss / (self.Ks + self.Ss)) * (
-                         self.Koh / (self.Koh + self.So)) * (
-                         self.Sno / (self.Kno + self.Sno)) * self.Xbh - self.Bh * self.Xbh
-        return DXbhDT
+        right_frame = Frame(main_frame, width=90, height=185, bg='grey')
+        right_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
 
-    def equation2(self, Xba, t):
-        DXbaDT = self.Ua * (self.Snh / (self.Knh + self.Snh)) * (
-                self.So / (self.Koa + self.So)) * self.Xba - self.Ba * self.Xba
-        return DXbaDT
+        # image_frame = Frame(window, width = 650, height=400, bg='grey')
+        # image_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
 
-    def equation3(self, Ss, t):
-        DSsDT = ((-self.Uh / self.Yh) * (self.Ss / (self.Ks + self.Ss)) * (
-                (self.So / (self.Koh + self.So)) + self.Ng * (self.Koh / (self.Koh + self.So)) * (
-                self.Sno / (self.Kno + self.Sno))) + self.Kh * (
-                         (self.Xs / self.Xbh) / (self.Kx + (self.Xs / self.Xbh))) * (
-                         (self.So / (self.Koh + self.So)) + self.Nh * (self.Koh / (self.Koh + self.So)) * (
-                         self.Sno / (self.Kno + self.Sno)))) * self.Xbh
-        return DSsDT
 
-    def equation4(self, Xs, t):
-        DXsDT = (1 - self.Fp) * (self.Bh * self.Xbh + self.Ba * self.Xba) - self.Kh * (
-                (self.Xs / self.Xbh) / (self.Kx + (self.Xs / self.Xbh))) * (
-                        (self.So / (self.Koh + self.So)) + self.Nh * (self.Koh / (self.Koh + self.So)) * (
-                        self.Sno / (self.Kno + self.Sno))) * self.Xbh
-        return DXsDT
 
-    def equation5(self, Xp, t):
-        DXpDT = self.Fp * (self.Bh * self.Xbh + self.Ba * self.Xba)
-        return DXpDT
+        # inital values
 
-    def equation6(self, Xnd, t):
-        DXndDT = (self.Ixb - self.Fp * self.Ixp) * (self.Bh * self.Xbh + self.Ba * self.Xba) - self.Kh * (
-                (self.Xnd / self.Xbh) / (self.Kx + (self.Xs / self.Bh))) * (
-                         (self.So / (self.Koh + self.So)) + self.Nh * (self.Koh / (self.Koh + self.So)) * (
-                         self.Sno / (self.Kno + self.Sno))) * self.Xbh
-        return DXndDT
+        self.entry_value_xbh = DoubleVar(right_frame, value=reactor.Xbh)
+        self.enter_xbh = Entry(right_frame, textvariable=self.entry_value_xbh).pack(padx=5, pady=5)
 
-    def equation7(self, Snd, t):
-        DSndDT = (-self.Ka * self.Snd + self.Kh * ((self.Xnd / self.Xbh) / (self.Kx + (self.Xs / self.Bh))) * (
-                (self.So / (self.Koh + self.So)) + self.Nh * (self.Koh / (self.Koh + self.So)) * (
-                self.Sno / (self.Kno + self.Sno)))) * self.Xbh
-        return DSndDT
+        self.entry_value_xba = DoubleVar(right_frame, value=reactor.Xba)
+        self.enter_xba = Entry(right_frame, textvariable=self.entry_value_xba).pack(padx=5, pady=5)
 
-    def equation8(self, Snh, t):
-        DSnhDT = (-self.Ixb * self.Uh * (self.Ss / (self.Ks + self.Ss)) * (
-                (self.So / (self.Koh + self.So)) + self.Ng * (self.Koh / (self.Koh + self.So)) * (
-                self.Sno / (self.Kno + self.Sno))) + self.Ka * self.Snd) * self.Xbh - self.Ua * (
-                         self.Ixb + 1 / self.Ya) * (self.Snh / (self.Knh + self.Snh)) * (
-                         self.So / (self.Koa + self.So)) * self.Xba
-        return DSnhDT
+        self.entry_value_ss = DoubleVar(right_frame, value=reactor.Ss)
+        self.enter_ss = Entry(right_frame, textvariable=self.entry_value_ss).pack(padx=5, pady=5)
 
-    def equation9(self, Sno, t):
-        DSnoDT = -self.Uh * self.Ng * ((1 - self.Yh) / (2.86 * self.Yh)) * (self.Ss / (self.Ks + self.Ss)) * (
-                self.Koh / (self.Koh + self.So)) * (
-                         self.Sno / (self.Kno + self.Sno)) * self.Xbh + (
-                         self.Ua / self.Ya) * (self.Snh / (self.Knh + self.Snh)) * (
-                         self.So / (self.Koa + self.So)) * self.Xba
-        return DSnoDT
+        self.entry_value_xs = DoubleVar(right_frame, value=reactor.Xs)
+        self.enter_xs = Entry(right_frame, textvariable=self.entry_value_xs).pack(padx=5, pady=5)
 
-    def equation10(self, So, t):
-        DSoDT = -self.Uh * ((1 - self.Yh) / self.Yh) * (self.Ss / (self.Ks + self.Ss)) * (
-                self.So / (self.Koh + self.So)) * self.Xbh - self.Ua * ((4.57 - self.Ya) / self.Ya) * (
-                        self.Snh / (self.Knh + self.Snh)) * (self.So / (self.Koa + self.So)) * self.Xba
+        self.entry_value_xp = DoubleVar(right_frame, value=reactor.Xp)
+        self.enter_xp = Entry(right_frame, textvariable=self.entry_value_xp).pack(padx=5, pady=5)
 
-        return DSoDT
+        self.entry_value_xnd = DoubleVar(right_frame, value=reactor.Xnd)
+        self.enter_xnd = Entry(right_frame, textvariable=self.entry_value_xnd).pack(padx=5, pady=5)
 
-    def rownania(self):
-        self.Xbh1 = odeint(self.equation1, self.Xbh, self.t)
-        self.Xba1 = odeint(self.equation2, self.Xba, self.t)
-        self.Ss1 = odeint(self.equation3, self.Ss, self.t)
-        self.Xs1 = odeint(self.equation4, self.Xs, self.t)
-        self.Xp1 = odeint(self.equation5, self.Xp, self.t)
-        self.Xnd1 = odeint(self.equation6, self.Xnd, self.t)
-        self.Snd1 = odeint(self.equation7, self.Snd, self.t)
-        self.Snh1 = odeint(self.equation8, self.Snh, self.t)
-        self.Sno1 = odeint(self.equation9, self.Sno, self.t)
-        self.So1 = odeint(self.equation10, self.So, self.t)
-        return self.Xbh1, self.Xba1, self.Ss1, self.Xs1, self.Xp1, self.Xnd1, self.Snd1, self.Snh1, self.Sno1, self.So1
+        self.entry_value_snd = DoubleVar(right_frame, value=reactor.Snd)
+        self.enter_snd = Entry(right_frame, textvariable=self.entry_value_snd).pack(padx=5, pady=5)
 
-    def graphs(i):
-        data = pd.read_csv('data.csv')
-        x = data['t']
-        y1 = data['Xbh']
-        y2 = data['Xba']
-        y3 = data['Ss']
-        y4 = data['Xs']
-        y5 = data['Xp']
-        y6 = data['Xnd']
-        y7 = data['Snd']
-        y8 = data['Snh']
-        y9 = data['Sno']
-        y10 = data['So']
+        self.entry_value_snh = DoubleVar(right_frame, value=reactor.Snh)
+        self.enter_snh = Entry(right_frame, textvariable=self.entry_value_snh).pack(padx=5, pady=5)
 
-        plt.cla()
-        plt.plot(x, y1, label='Xbh')
-        plt.plot(x, y2, label='Xba')
-        plt.plot(x, y3, label='Ss')
-        plt.plot(x, y4, label='Xs')
-        plt.plot(x, y5, label='Xp')
-        plt.plot(x, y6, label='Xnd')
-        plt.plot(x, y7, label='Snd')
-        plt.plot(x, y8, label='Snh')
-        plt.plot(x, y9, label='Sno')
-        plt.plot(x, y10, label='So')
-        plt.legend(loc='upper left')
-        plt.gca().xaxis.set_major_locator(mticker.MaxNLocator())
-        plt.tight_layout()
+        self.entry_value_sno = DoubleVar(right_frame, value=reactor.Sno)
+        self.enter_sno = Entry(right_frame, textvariable=self.entry_value_sno).pack(padx=5, pady=5)
 
-    def __iter__(self):
-        return
+        self.entry_value_so = DoubleVar(right_frame, value=reactor.So)
+        self.enter_so = Entry(right_frame, textvariable=self.entry_value_so).pack(padx=5, pady=5)
 
-    def __next__(self):
-        # self.Xbh += 1
-        self.Xbh = self.rownania()[0][-1, 0]
-        self.Xba = self.rownania()[1][-1, 0]
-        self.Ss = self.rownania()[2][-1, 0]
-        self.Xs = self.rownania()[3][-1, 0]
-        self.Xp = self.rownania()[4][-1, 0]
-        self.Xnd = self.rownania()[5][-1, 0]
-        self.Snd = self.rownania()[6][-1, 0]
-        # self.Snd += 0.05
-        self.Snh = self.rownania()[7][-1, 0]
-        self.Sno = self.rownania()[8][-1, 0]
-        self.So = self.rownania()[9][-1, 0]
-        # self.So += 0.00001
-        return self.Xbh, self.Xba, self.Ss, self.Xs, self.Xp, self.Xnd, self.Snd, self.Snh, self.Sno, self.So
+        # Labels
+        define = Frame(left_frame, width=90, height=185)
+        define.pack(side='left', fill='both', padx=5, pady=5, expand=True)
+
+        # Label(define, text='Symulator', bg="black", fg="white", font="none 12 bold").pack()
+        Label(define, text="Xbh", font="none 12 bold").pack(padx=5, pady=7)
+        Label(define, text="Xba", font="none 12 bold").pack(padx=5, pady=7)
+        Label(define, text="Ss", font="none 12 bold").pack(padx=5, pady=7)
+        Label(define, text="Xs", font="none 12 bold").pack(padx=5, pady=7)
+        Label(define, text="Xp", font="none 12 bold").pack(padx=5, pady=7)
+        Label(define, text="Xnd", font="none 12 bold").pack(padx=5, pady=8)
+        Label(define, text="Snd", font="none 12 bold").pack(padx=5, pady=7)
+        Label(define, text="Snh", font="none 12 bold").pack(padx=5, pady=8)
+        Label(define, text="Sno", font="none 12 bold").pack(padx=5, pady=7)
+        Label(define, text="So", font="none 12 bold").pack(padx=5, pady=7)
+
+        #graph
+        # Label(image_frame, self.obrazek()).pack(fill = 'both', padx=5, pady=5)
+
+        # Buttons
+        Button(right_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(side='bottom',padx=5, pady=5)
+        Button(right_frame, text="Pokaż wykres", width="15", command=lambda: self.obrazek()).pack(side = 'bottom',padx=5, pady=5)
+
+    def start_simulation(self):
+        _thread.start_new_thread(file_csv.makesimulation, ())
+        xbh1 = float(self.entry_value_xbh.get())
+        file_csv.model.Xbh = xbh1
+
+        xba1 = float(self.entry_value_xba.get())
+        file_csv.model.Xba = xba1
+
+        ss1 = float(self.entry_value_ss.get())
+        file_csv.model.Ss = ss1
+
+        xs1 = float(self.entry_value_xs.get())
+        file_csv.model.Xs = xs1
+
+        xp1 = float(self.entry_value_xp.get())
+        file_csv.model.Xp = xp1
+
+        xnd1 = float(self.entry_value_xnd.get())
+        file_csv.model.Xnd = xnd1
+
+        xbh1 = float(self.entry_value_xbh.get())
+        file_csv.model.Xbh = xbh1
+
+        snd1 = float(self.entry_value_snd.get())
+        file_csv.model.Snd = snd1
+
+        snh1 = float(self.entry_value_snh.get())
+        file_csv.model.Snh = snh1
+
+        sno1 = float(self.entry_value_sno.get())
+        file_csv.model.Sno = sno1
+
+        so1 = float(self.entry_value_so.get())
+        file_csv.model.So = so1
+
+    def obrazek(self):
+        x = reactor_ASM1.graphs
+        figure1 = plt.gcf()
+        canvas = FigureCanvasTkAgg(figure1, master=self.master)
+        # canvas.get_tk_widget().grid(column=5, row=1, sticky=(N, W, E, S))
+        canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+        ani = FuncAnimation(plt.gcf(), x, interval=1000)
+        # canvas.show()
+        canvas.draw()
+
+window = Tk()
+window.maxsize(1200, 700)
+window.configure(background="black")
+gui = Simulator(window)
+window.mainloop()
+
+# window.protocol("WM_DELETE_WINDOW", on_closing)
+
+
+# def on_closing():
+#     messagebox.askokcancel(title="hello", message="hello")
+#     if messagebox.askokcancel("Quit", "Do you want to quit?"):
+#         window.destroy()
