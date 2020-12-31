@@ -1,4 +1,9 @@
+import os
+import subprocess
 from tkinter import *
+
+from matplotlib.figure import Figure
+
 from test import reactor_ASM1
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import file_csv
@@ -6,7 +11,9 @@ import _thread
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
+# from tkinter.ttk import Notebook
 reactor = reactor_ASM1()
+
 
 # window = Tk()
 # window.title("Simulator")
@@ -18,8 +25,8 @@ class Simulator:
         master.title("Symulator")
 
         # frame
-        main_frame = Frame(window, width=180, height=370, bg='grey')
-        main_frame.pack(side='left', fill = 'both', padx=10, pady=5, expand=True)
+        main_frame = Frame(window, width=150, height=370, bg='grey')
+        main_frame.pack(side='left', fill='both', padx=10, pady=5)
 
         left_frame = Frame(main_frame, width=90, height=185, bg='grey')
         left_frame.pack(side='left', fill='both', padx=10, pady=5, expand=True)
@@ -27,10 +34,10 @@ class Simulator:
         right_frame = Frame(main_frame, width=90, height=185, bg='grey')
         right_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
 
-        # image_frame = Frame(window, width = 650, height=400, bg='grey')
-        # image_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
+        self.graph_frame = Frame(window, width=400, height=400, bg='grey')
+        self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
 
-
+        # graph frame
 
         # inital values
 
@@ -80,57 +87,77 @@ class Simulator:
         Label(define, text="Sno", font="none 12 bold").pack(padx=5, pady=7)
         Label(define, text="So", font="none 12 bold").pack(padx=5, pady=7)
 
-        #graph
-        # Label(image_frame, self.obrazek()).pack(fill = 'both', padx=5, pady=5)
+        # graph
+        self.x = reactor_ASM1.graphs
+        self.figure1 = plt.gcf()
+        self.canvas = FigureCanvasTkAgg(self.figure1, master=self.graph_frame)
 
         # Buttons
-        Button(right_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(side='bottom',padx=5, pady=5)
-        Button(right_frame, text="Pokaż wykres", width="15", command=lambda: self.obrazek()).pack(side = 'bottom',padx=5, pady=5)
+        Button(right_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(
+            side='bottom', padx=5, pady=5)
+        Button(right_frame, text="Pokaż wykres", width="15", command=lambda: self.obrazek()).pack(side='bottom', padx=5,
+                                                                                                  pady=5)
+        Button(right_frame, text="Wyzeruj", width="15", command=lambda: self.wyzeruj()).pack(
+            side='bottom', padx=5,
+            pady=5)
 
     def start_simulation(self):
-        _thread.start_new_thread(file_csv.makesimulation, ())
-        xbh1 = float(self.entry_value_xbh.get())
-        file_csv.model.Xbh = xbh1
+        if os.path.isfile("data.csv"):
+            print ("Najpierw zakoncz poprzednia symulacje")
+        else:
+            file_csv.only_for_close_function = True
+            _thread.start_new_thread(file_csv.makesimulation, ())
 
-        xba1 = float(self.entry_value_xba.get())
-        file_csv.model.Xba = xba1
+            xbh1 = float(self.entry_value_xbh.get())
+            file_csv.model.Xbh = xbh1
 
-        ss1 = float(self.entry_value_ss.get())
-        file_csv.model.Ss = ss1
+            xba1 = float(self.entry_value_xba.get())
+            file_csv.model.Xba = xba1
 
-        xs1 = float(self.entry_value_xs.get())
-        file_csv.model.Xs = xs1
+            ss1 = float(self.entry_value_ss.get())
+            file_csv.model.Ss = ss1
 
-        xp1 = float(self.entry_value_xp.get())
-        file_csv.model.Xp = xp1
+            xs1 = float(self.entry_value_xs.get())
+            file_csv.model.Xs = xs1
 
-        xnd1 = float(self.entry_value_xnd.get())
-        file_csv.model.Xnd = xnd1
+            xp1 = float(self.entry_value_xp.get())
+            file_csv.model.Xp = xp1
 
-        xbh1 = float(self.entry_value_xbh.get())
-        file_csv.model.Xbh = xbh1
+            xnd1 = float(self.entry_value_xnd.get())
+            file_csv.model.Xnd = xnd1
 
-        snd1 = float(self.entry_value_snd.get())
-        file_csv.model.Snd = snd1
+            xbh1 = float(self.entry_value_xbh.get())
+            file_csv.model.Xbh = xbh1
 
-        snh1 = float(self.entry_value_snh.get())
-        file_csv.model.Snh = snh1
+            snd1 = float(self.entry_value_snd.get())
+            file_csv.model.Snd = snd1
 
-        sno1 = float(self.entry_value_sno.get())
-        file_csv.model.Sno = sno1
+            snh1 = float(self.entry_value_snh.get())
+            file_csv.model.Snh = snh1
 
-        so1 = float(self.entry_value_so.get())
-        file_csv.model.So = so1
+            sno1 = float(self.entry_value_sno.get())
+            file_csv.model.Sno = sno1
 
+            so1 = float(self.entry_value_so.get())
+            file_csv.model.So = so1
     def obrazek(self):
-        x = reactor_ASM1.graphs
-        figure1 = plt.gcf()
-        canvas = FigureCanvasTkAgg(figure1, master=self.master)
-        # canvas.get_tk_widget().grid(column=5, row=1, sticky=(N, W, E, S))
-        canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
-        ani = FuncAnimation(plt.gcf(), x, interval=1000)
-        # canvas.show()
-        canvas.draw()
+        self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+        ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
+        self.canvas.draw()
+
+
+
+    def wyzeruj(self):
+        # for item in self.canvas.get_tk_widget().find_all():
+        #     self.canvas.get_tk_widget().delete(item)
+        # self.obrazek().plt.clf()
+        file_csv.only_for_close_function = False
+        if os.path.isfile("data.csv"):
+            os.remove("data.csv")
+        else:
+            print("symulacja zostala juz zakonczona")
+
+
 
 window = Tk()
 window.maxsize(1200, 700)
