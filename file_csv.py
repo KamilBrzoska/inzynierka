@@ -11,7 +11,10 @@ model = test.Settler()
 
 
 def exit_handler():
-    os.remove("data.csv")
+    try:
+        os.remove("data.csv")
+    except FileNotFoundError:
+        print("plik z danymi zostal usuniety")
 
 
 only_for_close_function = True

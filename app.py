@@ -1,9 +1,5 @@
 import os
-import subprocess
 from tkinter import *
-
-from matplotlib.figure import Figure
-
 from test import reactor_ASM1
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import file_csv
@@ -11,12 +7,7 @@ import _thread
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-# from tkinter.ttk import Notebook
 reactor = reactor_ASM1()
-
-
-# window = Tk()
-# window.title("Simulator")
 
 
 class Simulator:
@@ -34,10 +25,10 @@ class Simulator:
         right_frame = Frame(main_frame, width=90, height=185, bg='grey')
         right_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
 
-        self.graph_frame = Frame(window, width=400, height=400, bg='grey')
-        self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
+        # values_frame = Frame(right_frame, width=90, height=185, bg='grey')
+        # values_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
 
-        # graph frame
+        # labele z wartosciami
 
         # inital values
 
@@ -74,6 +65,7 @@ class Simulator:
         # Labels
         define = Frame(left_frame, width=90, height=185)
         define.pack(side='left', fill='both', padx=5, pady=5, expand=True)
+        # Label(values_frame, textvariable=reactor.Xbh, font="none 12 bold").pack(padx=5, pady=7)
 
         # Label(define, text='Symulator', bg="black", fg="white", font="none 12 bold").pack()
         Label(define, text="Xbh", font="none 12 bold").pack(padx=5, pady=7)
@@ -88,9 +80,9 @@ class Simulator:
         Label(define, text="So", font="none 12 bold").pack(padx=5, pady=7)
 
         # graph
-        self.x = reactor_ASM1.graphs
-        self.figure1 = plt.gcf()
-        self.canvas = FigureCanvasTkAgg(self.figure1, master=self.graph_frame)
+        # self.x = reactor_ASM1.graphs
+        # self.figure1 = plt.gcf()
+        # self.canvas = FigureCanvasTkAgg(self.figure1, master=self.graph_frame)
 
         # Buttons
         Button(right_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(
@@ -103,7 +95,7 @@ class Simulator:
 
     def start_simulation(self):
         if os.path.isfile("data.csv"):
-            print ("Najpierw zakoncz poprzednia symulacje")
+            print("Najpierw zakoncz poprzednia symulacje")
         else:
             file_csv.only_for_close_function = True
             _thread.start_new_thread(file_csv.makesimulation, ())
@@ -140,23 +132,40 @@ class Simulator:
 
             so1 = float(self.entry_value_so.get())
             file_csv.model.So = so1
+
     def obrazek(self):
-        self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
-        ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
-        self.canvas.draw()
+        x = hasattr(self, 'canvas')
+        if x == True:
+            print("najpiew zakoncz poprzednia operacje")
+        elif x == False:
+            self.graph_frame = Frame(window, width=400, height=400, bg='grey')
+            self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
+            self.x = reactor_ASM1.graphs
+            self.figure1 = plt.gcf()
+            self.canvas = FigureCanvasTkAgg(self.figure1, master=self.graph_frame)
 
-
+            self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+            self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
+            self.canvas.draw()
 
     def wyzeruj(self):
-        for item in self.canvas.get_tk_widget().find_all():
-            self.canvas.get_tk_widget().pack_forget()
-        # self.obrazek().plt.clf()
+        x1 = hasattr(self, 'canvas')
+        if x1 == True:
+            for item in self.canvas.get_tk_widget().find_all():
+                self.canvas.get_tk_widget().delete(item)
+            del self.canvas
+            self.graph_frame.destroy()
+
+        elif x1 == False:
+            print("Symulacja zostala juz zakonczona")
+
         file_csv.only_for_close_function = False
+        file_csv.model.t = [0.0, 0.1]
+
         if os.path.isfile("data.csv"):
             os.remove("data.csv")
         else:
             print("symulacja zostala juz zakonczona")
-
 
 
 window = Tk()
