@@ -28,8 +28,6 @@ class Simulator:
         self.values_frame = Frame(right_frame, width=90, height=185, bg='grey')
         self.values_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
 
-        # labele z wartosciami
-
         # inital values
 
         self.entry_value_xbh = DoubleVar(right_frame, value=reactor.Xbh)
@@ -61,6 +59,10 @@ class Simulator:
 
         self.entry_value_so = DoubleVar(right_frame, value=reactor.So)
         self.enter_so = Entry(right_frame, textvariable=self.entry_value_so).pack(padx=5, pady=5)
+
+        self.entry_value_time = DoubleVar(right_frame, value=reactor.t[-1])
+        self.enter_time = Entry(right_frame, textvariable=self.entry_value_time).pack(padx=5, pady=5, anchor = W)
+
 
         # Labels
         define = Frame(left_frame, width=90, height=185)
@@ -97,6 +99,9 @@ class Simulator:
         self.show_so = Label(self.values_frame, textvariable=self.entry_value_so, font="none 12 bold")
         self.show_so.pack(padx=5, pady=7)
 
+        self.show_time = Label(self.values_frame, textvariable=self.entry_value_so, font="none 12 bold")
+        self.show_time.pack(padx=5, pady=8)
+
         # Label(define, text='Symulator', bg="black", fg="white", font="none 12 bold").pack()
         Label(define, text="Xbh", font="none 12 bold").pack(padx=5, pady=7)
         Label(define, text="Xba", font="none 12 bold").pack(padx=5, pady=7)
@@ -108,11 +113,7 @@ class Simulator:
         Label(define, text="Snh", font="none 12 bold").pack(padx=5, pady=8)
         Label(define, text="Sno", font="none 12 bold").pack(padx=5, pady=7)
         Label(define, text="So", font="none 12 bold").pack(padx=5, pady=7)
-
-        # graph
-        # self.x = reactor_ASM1.graphs
-        # self.figure1 = plt.gcf()
-        # self.canvas = FigureCanvasTkAgg(self.figure1, master=self.graph_frame)
+        Label(define, text="krok", font="none 12 bold").pack(padx=5, pady=8)
 
         # Buttons
         Button(right_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(
@@ -127,8 +128,7 @@ class Simulator:
         if os.path.isfile("data.csv"):
             print("Najpierw zakoncz poprzednia symulacje")
         else:
-            file_csv.only_for_close_function = True
-            _thread.start_new_thread(file_csv.makesimulation, ())
+
 
             xbh1 = float(self.entry_value_xbh.get())
             file_csv.model.Xbh = xbh1
@@ -162,6 +162,15 @@ class Simulator:
 
             so1 = float(self.entry_value_so.get())
             file_csv.model.So = so1
+
+            t = float(self.entry_value_time.get())
+            file_csv.model.t[-1] = t
+            file_csv.makesimulation.add_time = t
+            file_csv.makesimulation.add_time1 = t
+
+            file_csv.only_for_close_function = True
+            _thread.start_new_thread(file_csv.makesimulation, (t,t))
+
 
     def obrazek(self):
         x = hasattr(self, 'canvas')
@@ -237,6 +246,10 @@ class Simulator:
         pocz9 = DoubleVar(value=file_csv.model.So)
         pocz9.set(round(file_csv.model.So, 10))
         self.show_so.config(textvariable=pocz9)
+
+        pocz_time = DoubleVar(value=file_csv.model.t[-1])
+        pocz_time.set(round(file_csv.model.t[-1], 10))
+        self.show_time.config(textvariable=pocz_time)
 
         window.after(1000, self.label)
 

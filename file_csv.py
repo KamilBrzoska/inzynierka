@@ -19,8 +19,7 @@ def exit_handler():
 only_for_close_function = True
 
 
-def makesimulation():
-    n=0.1
+def makesimulation(add_time,add_time1):
     fieldnames = ["Xbh", "Xba", "Ss", "Xs", "Xp", "Xnd", "Snd", "Snh", "Sno", "So", "t"]
     with open('data.csv', 'w') as csv_file:
         csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
@@ -41,17 +40,15 @@ def makesimulation():
             Sno = Step[8]
             So = Step[9]
             x1 = model.t[-1]
-            x1 += 0.1
+            x1 += add_time
             x1 = round(x1, 1)
             model.t[-1] = x1
 
             x0 = model.t[0]
-            x0 += 0.1
+            x0 += add_time1
             x0 = round(x0, 1)
             model.t[0] = x0
 
-            # n += 0.01
-            # model.t = np.linspace(0, n)
 
             info = {
                 "Xbh": Xbh,
