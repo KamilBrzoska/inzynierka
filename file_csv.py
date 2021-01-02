@@ -82,6 +82,7 @@ def makesimulation():
             # koniec sprawdzenia osadnka
             # wlaczyc tego printa zeby pokazywalo stezenia z reaktora
             # print(Xbh, Xba, Ss, Xs, Xp, Xnd, Snd, Snh, Sno, So, model.t)
+
         time.sleep(1)
         # if Xnd >= 200:
         #     img = mpimg.imread('livelong.jpeg')

@@ -174,9 +174,9 @@ class Settler(reactor_ASM1):
         # generowanie losowych wartości X dla każdej warstwy
         self.i = 0
         self.Xin = self.Xbh + self.Xba + self.Xs + self.Xp + self.Xnd
-        self.X = np.random.random(self.n)
-        self.X /= self.X.sum()
-        self.X *= self.Xin
+        # self.X = np.random.random(self.n)
+        # self.X /= self.X.sum()
+        # self.X *= self.Xin
         #
         self.nv = 10
         self.Qcl = 30
@@ -185,16 +185,16 @@ class Settler(reactor_ASM1):
         self.A = 50
         self.H = 100
         self.v0 = 10
-        self.X1 = self.X[0]
-        self.X2 = self.X[1]
-        self.X3 = self.X[2]
-        self.X4 = self.X[3]
-        self.X5 = self.X[4]
-        self.X6 = self.X[5]
-        self.X7 = self.X[6]
-        self.X8 = self.X[7]
-        self.X9 = self.X[8]
-        self.X10 = self.X[9]
+        self.X1 = 0
+        self.X2 = 0
+        self.X3 = 0
+        self.X4 = 0
+        self.X5 = 0
+        self.X6 = 0
+        self.X7 = 0
+        self.X8 = 0
+        self.X9 = 0
+        self.X10 = 0
 
     ## funkcje prędkości sedymentacji
     def vs1(self):
@@ -241,16 +241,17 @@ class Settler(reactor_ASM1):
 
     ## równania różniczkowe zwyczajne
     # warstwa górna
-    def dX1dt(self, u1, t):
-        u1 = self.X1, self.X2, self.X3, self.X4, self.X5, self.X6, self.X7, self.X8, self.X9, self.X10
-        Jup = self.Jup1()
-        Js = self.Js1()
+    def dX1dt(self, u1, t, Jup, Js):
+        # Jup = self.Jup1()
+        # Js = self.Js1()
+        self.X1, self.X2, self.X3, self.X4, self.X5, self.X6, self.X7, self.X8, self.X9, self.X10 = u1
+
         dX1dt = (self.n / self.H) * (Jup[1] - Js[0] - ((self.Qcl * self.X1) / self.A))
         # warstwy powyżej wejściowej
         dX2dt = (self.n / self.H) * (Jup[2] - Jup[1] + Js[0] - Js[1])
         dX3dt = (self.n / self.H) * (Jup[3] - Jup[2] + Js[1] - Js[2])
         dX4dt = (self.n / self.H) * (Jup[4] - Jup[3] + Js[2] - Js[3])
-        dX5dt = (self.n / self.H) * (Jup[5] - Jup[6] + Js[3] - Js[4])
+        dX5dt = (self.n / self.H) * (Jup[5] - Jup[4] + Js[3] - Js[4])
         dX6dt = (self.n / self.H) * (Jup[6] - Jup[5] + Js[4] - Js[5])
         # warstwa wejściowa
         dX7dt = (self.n / self.H) * (-Jup[6] - Jup[7] + Js[5] - Js[6] + ((self.Qin * self.Xin) / self.A))
@@ -259,11 +260,13 @@ class Settler(reactor_ASM1):
         dX9dt = (self.n / self.H) * (Jup[8] - Jup[9] + Js[7] - Js[8])
         # warstwa dolna
         dX10dt = (self.n / self.H) * (Jup[9] + Js[8] - ((self.Qth * self.X10) / self.A))
-        return dX1dt, dX2dt, dX3dt, dX4dt, dX5dt, dX6dt, dX7dt, dX8dt, dX9dt, dX10dt
+        return [dX1dt, dX2dt, dX3dt, dX4dt, dX5dt, dX6dt, dX7dt, dX8dt, dX9dt, dX10dt]
 
     def odesolve_settler(self):
+        Jup = self.Jup1()
+        Js = self.Js1()
         uzero1 = [self.X1, self.X2, self.X3, self.X4, self.X5, self.X6, self.X7, self.X8, self.X9, self.X10]
-        solution1 = odeint(self.dX1dt, uzero1, self.t)
+        solution1 = odeint(self.dX1dt, uzero1, self.t, args=(Jup, Js))
         return solution1
 
     def __iter__(self):
@@ -283,9 +286,6 @@ class Settler(reactor_ASM1):
         self.So = rown[9]
 
         self.Xin = rown[0] + rown[1] + rown[3] + rown[4] + rown[5]
-        self.X = np.random.random(self.n)
-        self.X /= self.X.sum()
-        self.X *= self.Xin
 
         solv = self.odesolve_settler()
         s0 = solv[1][0]
@@ -298,4 +298,14 @@ class Settler(reactor_ASM1):
         s7 = solv[1][7]
         s8 = solv[1][8]
         s9 = solv[1][9]
+        self.X1 = solv[1][0]
+        self.X2 = solv[1][1]
+        self.X3 = solv[1][2]
+        self.X4 = solv[1][3]
+        self.X5 = solv[1][4]
+        self.X6 = solv[1][5]
+        self.X7 = solv[1][6]
+        self.X8 = solv[1][7]
+        self.X9 = solv[1][8]
+        self.X10 = solv[1][9]
         return self.Xbh, self.Xba, self.Ss, self.Xs, self.Xp, self.Xnd, self.Snd, self.Snh, self.Sno, self.So, s0, s1, s2, s3, s4, s5, s6, s7, s8, s9

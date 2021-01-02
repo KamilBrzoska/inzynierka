@@ -148,8 +148,8 @@ class Simulator:
 
 
     def wyzeruj(self):
-        # for item in self.canvas.get_tk_widget().find_all():
-        #     self.canvas.get_tk_widget().delete(item)
+        for item in self.canvas.get_tk_widget().find_all():
+            self.canvas.get_tk_widget().pack_forget()
         # self.obrazek().plt.clf()
         file_csv.only_for_close_function = False
         if os.path.isfile("data.csv"):
