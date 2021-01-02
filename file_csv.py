@@ -81,10 +81,10 @@ def makesimulation():
             s7 = Step[17]
             s8 = Step[18]
             s9 = Step[19]
-            print(s0, s1, s2, s3, s4, s5, s6, s7, s8, s9)
+            # print(s0, s1, s2, s3, s4, s5, s6, s7, s8, s9)
             # koniec sprawdzenia osadnka
             # wlaczyc tego printa zeby pokazywalo stezenia z reaktora
-            # print(Xbh, Xba, Ss, Xs, Xp, Xnd, Snd, Snh, Sno, So, model.t)
+            print(Xbh, Xba, Ss, Xs, Xp, Xnd, Snd, Snh, Sno, So, model.t)
 
         time.sleep(1)
         # if Xnd >= 200:
