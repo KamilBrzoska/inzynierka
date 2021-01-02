@@ -34,8 +34,9 @@ Ka = 25  #
 Ya = 0.206  #
 Ixp = 0.068  #
         # t = [0.0, 0.1]
-t = np.linspace(0,100)
-# t = [0.1,0.2]
+# t = np.linspace(0,35)
+t = np.arange(0,35,0.8)
+# t = [0.1,35]
 
 def equationss(solution, t):
     Xbh=solution[0]

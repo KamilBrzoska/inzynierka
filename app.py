@@ -66,35 +66,35 @@ class Simulator:
         define = Frame(left_frame, width=90, height=185)
         define.pack(side='left', fill='both', padx=5, pady=5, expand=True)
 
-        #labels for values in real time
-        self.show_xbh = Label(self.values_frame, textvariable= self.entry_value_xbh , font="none 12 bold")
+        # labels for values in real time
+        self.show_xbh = Label(self.values_frame, textvariable=self.entry_value_xbh, font="none 12 bold")
         self.show_xbh.pack(padx=5, pady=7)
 
-        self.show_xba = Label(self.values_frame, textvariable= self.entry_value_xba , font="none 12 bold")
+        self.show_xba = Label(self.values_frame, textvariable=self.entry_value_xba, font="none 12 bold")
         self.show_xba.pack(padx=5, pady=7)
 
-        self.show_ss = Label(self.values_frame, textvariable= self.entry_value_ss , font="none 12 bold")
+        self.show_ss = Label(self.values_frame, textvariable=self.entry_value_ss, font="none 12 bold")
         self.show_ss.pack(padx=5, pady=7)
 
-        self.show_xs = Label(self.values_frame, textvariable= self.entry_value_xs , font="none 12 bold")
+        self.show_xs = Label(self.values_frame, textvariable=self.entry_value_xs, font="none 12 bold")
         self.show_xs.pack(padx=5, pady=7)
 
-        self.show_xp = Label(self.values_frame, textvariable= self.entry_value_xp , font="none 12 bold")
+        self.show_xp = Label(self.values_frame, textvariable=self.entry_value_xp, font="none 12 bold")
         self.show_xp.pack(padx=5, pady=7)
 
-        self.show_xnd = Label(self.values_frame, textvariable= self.entry_value_xnd , font="none 12 bold")
+        self.show_xnd = Label(self.values_frame, textvariable=self.entry_value_xnd, font="none 12 bold")
         self.show_xnd.pack(padx=5, pady=8)
 
-        self.show_snd = Label(self.values_frame, textvariable= self.entry_value_snd , font="none 12 bold")
+        self.show_snd = Label(self.values_frame, textvariable=self.entry_value_snd, font="none 12 bold")
         self.show_snd.pack(padx=5, pady=7)
 
-        self.show_snh = Label(self.values_frame, textvariable= self.entry_value_snh , font="none 12 bold")
+        self.show_snh = Label(self.values_frame, textvariable=self.entry_value_snh, font="none 12 bold")
         self.show_snh.pack(padx=5, pady=8)
 
-        self.show_sno = Label(self.values_frame, textvariable= self.entry_value_sno , font="none 12 bold")
+        self.show_sno = Label(self.values_frame, textvariable=self.entry_value_sno, font="none 12 bold")
         self.show_sno.pack(padx=5, pady=7)
 
-        self.show_so = Label(self.values_frame, textvariable= self.entry_value_so , font="none 12 bold")
+        self.show_so = Label(self.values_frame, textvariable=self.entry_value_so, font="none 12 bold")
         self.show_so.pack(padx=5, pady=7)
 
         # Label(define, text='Symulator', bg="black", fg="white", font="none 12 bold").pack()
@@ -200,43 +200,43 @@ class Simulator:
     def label(self):
         pocz0 = DoubleVar()
         pocz0.set(round(file_csv.model.Xbh, 10))
-        self.show_xbh.config(textvariable = pocz0)
+        self.show_xbh.config(textvariable=pocz0)
 
         pocz1 = DoubleVar()
         pocz1.set(round(file_csv.model.Xba, 10))
-        self.show_xba.config(textvariable = pocz1)
+        self.show_xba.config(textvariable=pocz1)
 
         pocz2 = DoubleVar(value=file_csv.model.Ss)
         pocz2.set(round(file_csv.model.Ss, 10))
-        self.show_ss.config(textvariable = pocz2)
+        self.show_ss.config(textvariable=pocz2)
 
         pocz3 = DoubleVar(value=file_csv.model.Xs)
         pocz3.set(round(file_csv.model.Xs, 10))
-        self.show_xs.config(textvariable = pocz3)
+        self.show_xs.config(textvariable=pocz3)
 
         pocz4 = DoubleVar(value=file_csv.model.Xp)
         pocz4.set(round(file_csv.model.Xp, 10))
-        self.show_xp.config(textvariable = pocz4)
+        self.show_xp.config(textvariable=pocz4)
 
         pocz5 = DoubleVar(value=file_csv.model.Xnd)
         pocz5.set(round(file_csv.model.Xnd, 10))
-        self.show_xnd.config(textvariable = pocz5)
+        self.show_xnd.config(textvariable=pocz5)
 
         pocz6 = DoubleVar(value=file_csv.model.Snd)
         pocz6.set(round(file_csv.model.Snd, 10))
-        self.show_snd.config(textvariable = pocz6)
+        self.show_snd.config(textvariable=pocz6)
 
         pocz7 = DoubleVar(value=file_csv.model.Snh)
         pocz7.set(round(file_csv.model.Snh, 10))
-        self.show_snh.config(textvariable = pocz7)
+        self.show_snh.config(textvariable=pocz7)
 
         pocz8 = DoubleVar(value=file_csv.model.Sno)
         pocz8.set(round(file_csv.model.Sno, 10))
-        self.show_sno.config(textvariable = pocz8)
+        self.show_sno.config(textvariable=pocz8)
 
         pocz9 = DoubleVar(value=file_csv.model.So)
         pocz9.set(round(file_csv.model.So, 10))
-        self.show_so.config(textvariable = pocz9)
+        self.show_so.config(textvariable=pocz9)
 
         window.after(1000, self.label)
 

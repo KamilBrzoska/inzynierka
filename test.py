@@ -41,7 +41,8 @@ class reactor_ASM1:
         self.Ya = 0.206  #
         self.Ixp = 0.068  #
         self.t = [0.0, 0.1]
-        # self.t = np.linspace(0, 100, 30)
+        # self.n = 0.1
+        # self.t = np.linspace(0, self.n, 10)
 
     def equationss(self, U, t):
         self.Xbh, self.Xba, self.Ss, self.Xs, self.Xp, self.Xnd, self.Snd, self.Snh, self.Sno, self.So = U
@@ -239,7 +240,7 @@ class Settler(reactor_ASM1):
         Js9 = min(vs[8] * self.X9, vs[9] * self.X10)
         return Js1, Js2, Js3, Js4, Js5, Js6, Js7, Js8, Js9
 
-    ## równania różniczkowe zwyczajne
+    # równania różniczkowe zwyczajne
     # warstwa górna
     def dX1dt(self, u1, t, Jup, Js):
         # Jup = self.Jup1()
@@ -309,3 +310,4 @@ class Settler(reactor_ASM1):
         self.X9 = solv[1][8]
         self.X10 = solv[1][9]
         return self.Xbh, self.Xba, self.Ss, self.Xs, self.Xp, self.Xnd, self.Snd, self.Snh, self.Sno, self.So, s0, s1, s2, s3, s4, s5, s6, s7, s8, s9
+

@@ -9,7 +9,6 @@ import numpy as np
 
 model = test.Settler()
 
-
 def exit_handler():
     try:
         os.remove("data.csv")
@@ -21,6 +20,7 @@ only_for_close_function = True
 
 
 def makesimulation():
+    n=0.1
     fieldnames = ["Xbh", "Xba", "Ss", "Xs", "Xp", "Xnd", "Snd", "Snh", "Sno", "So", "t"]
     with open('data.csv', 'w') as csv_file:
         csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
@@ -50,10 +50,8 @@ def makesimulation():
             x0 = round(x0, 1)
             model.t[0] = x0
 
-            # x1 = model.t[-1]
-            # x1 += 0.1
-            # x1 = round(x1, 1)
-            # model.t.append(x1)
+            # n += 0.01
+            # model.t = np.linspace(0, n)
 
             info = {
                 "Xbh": Xbh,
@@ -66,7 +64,7 @@ def makesimulation():
                 "Snh": Snh,
                 "Sno": Sno,
                 "So": So,
-                "t": model.t,
+                "t": model.t[-1],
             }
             csv_writer.writerow(info)
 
