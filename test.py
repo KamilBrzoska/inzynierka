@@ -207,7 +207,14 @@ class Settler(reactor_ASM1):
         self.X7 = 0
         self.X8 = 0
         self.X9 = 0
-        self.X10 = 0
+        self.X10 = 0.000000001
+
+        #recykl
+        self.Xbhw = 0
+        self.Xbaw = 0
+        self.Xsw = 0
+        self.Xpw = 0
+        self.Xndw = 0
 
     ## funkcje prędkości sedymentacji
     def vs1(self):
@@ -284,18 +291,21 @@ class Settler(reactor_ASM1):
 
     def recykl(self):
         self.rec = (self.Qth * self.X10) / self.A
-        self.Xbhw = self.rec * (self.Xbh / self.rec)
-        self.Xbaw = self.rec * (self.Xba / self.rec)
-        self.Xsw = self.rec * (self.Xs / self.rec)
-        self.Xpw = self.rec * (self.Xp / self.rec)
-        self.Xndw = self.rec * (self.Xnd / self.rec)
+        if self.rec == 0:
+            print("recykl = 0")
+        else:
+            self.Xbhw = self.rec * (self.Xbh / self.rec)
+            self.Xbaw = self.rec * (self.Xba / self.rec)
+            self.Xsw = self.rec * (self.Xs / self.rec)
+            self.Xpw = self.rec * (self.Xp / self.rec)
+            self.Xndw = self.rec * (self.Xnd / self.rec)
         return self.rec, self.Xbhw, self.Xbaw, self.Xsw, self.Xpw, self.Xndw
 
     def masa(self):
         recykl = self.recykl()
         rownania = self.rownania()
         self.Xbh2 = ((rownania[0] * self.V) + recykl[1] - (rownania[0] * self.Qw)) / self.V
-        self.Xba2 = ((rownania[1] * self.V) + recykl[2] - (rownania[0] * self.Qw)) / self.V
+        self.Xba2 = ((rownania[1] * self.V) + recykl[2] - (rownania[1] * self.Qw)) / self.V
         self.Ss2 = ((rownania[2] * self.V) + (self.Ssd * self.Qd) - (rownania[2] * self.Qw)) / self.V
         self.Xs2 = ((rownania[3] * self.V) + recykl[3] - (rownania[3] * self.Qw)) / self.V
         self.Xp2 = ((rownania[4] * self.V) + recykl[4] - (rownania[4] * self.Qw)) / self.V
