@@ -28,45 +28,49 @@ class Simulator:
         self.values_frame = Frame(right_frame, width=90, height=185, bg='grey')
         self.values_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
 
-        # inital values
+        self.entry_frame = Frame(left_frame, width=90, height=185, bg='grey')
+        self.entry_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
 
-        self.entry_value_xbh = DoubleVar(right_frame, value=reactor.Xbh)
-        self.enter_xbh = Entry(right_frame, textvariable=self.entry_value_xbh).pack(padx=5, pady=5)
+        define = Frame(left_frame, width=90, height=185)
+        define.pack(side='left', fill='both', padx=5, pady=5, expand=True)
 
-        self.entry_value_xba = DoubleVar(right_frame, value=reactor.Xba)
-        self.enter_xba = Entry(right_frame, textvariable=self.entry_value_xba).pack(padx=5, pady=5)
+        # initself.entry_frame
+        self.entry_value_xbh = DoubleVar(self.entry_frame, value=reactor.Xbh)
+        self.enter_xbh = Entry(self.entry_frame, textvariable=self.entry_value_xbh).pack(padx=5, pady = 5)
 
-        self.entry_value_ss = DoubleVar(right_frame, value=reactor.Ss)
-        self.enter_ss = Entry(right_frame, textvariable=self.entry_value_ss).pack(padx=5, pady=5)
+        self.entry_value_xba = DoubleVar(self.entry_frame, value=reactor.Xba)
+        self.enter_xba = Entry(self.entry_frame, textvariable=self.entry_value_xba).pack(padx=5, pady = 5)
 
-        self.entry_value_xs = DoubleVar(right_frame, value=reactor.Xs)
-        self.enter_xs = Entry(right_frame, textvariable=self.entry_value_xs).pack(padx=5, pady=5)
+        self.entry_value_ss = DoubleVar(self.entry_frame, value=reactor.Ss)
+        self.enter_ss = Entry(self.entry_frame, textvariable=self.entry_value_ss).pack(padx=5, pady = 5)
 
-        self.entry_value_xp = DoubleVar(right_frame, value=reactor.Xp)
-        self.enter_xp = Entry(right_frame, textvariable=self.entry_value_xp).pack(padx=5, pady=5)
+        self.entry_value_xs = DoubleVar(self.entry_frame, value=reactor.Xs)
+        self.enter_xs = Entry(self.entry_frame, textvariable=self.entry_value_xs).pack(padx=5, pady=5)
 
-        self.entry_value_xnd = DoubleVar(right_frame, value=reactor.Xnd)
-        self.enter_xnd = Entry(right_frame, textvariable=self.entry_value_xnd).pack(padx=5, pady=5)
+        self.entry_value_xp = DoubleVar(self.entry_frame, value=reactor.Xp)
+        self.enter_xp = Entry(self.entry_frame, textvariable=self.entry_value_xp).pack(padx=5, pady=5)
 
-        self.entry_value_snd = DoubleVar(right_frame, value=reactor.Snd)
-        self.enter_snd = Entry(right_frame, textvariable=self.entry_value_snd).pack(padx=5, pady=5)
+        self.entry_value_xnd = DoubleVar(self.entry_frame, value=reactor.Xnd)
+        self.enter_xnd = Entry(self.entry_frame, textvariable=self.entry_value_xnd).pack(padx=5, pady=5)
 
-        self.entry_value_snh = DoubleVar(right_frame, value=reactor.Snh)
-        self.enter_snh = Entry(right_frame, textvariable=self.entry_value_snh).pack(padx=5, pady=5)
+        self.entry_value_snd = DoubleVar(self.entry_frame, value=reactor.Snd)
+        self.enter_snd = Entry(self.entry_frame, textvariable=self.entry_value_snd).pack(padx=5, pady=5)
 
-        self.entry_value_sno = DoubleVar(right_frame, value=reactor.Sno)
-        self.enter_sno = Entry(right_frame, textvariable=self.entry_value_sno).pack(padx=5, pady=5)
+        self.entry_value_snh = DoubleVar(self.entry_frame, value=reactor.Snh)
+        self.enter_snh = Entry(self.entry_frame, textvariable=self.entry_value_snh).pack(padx=5, pady=5)
 
-        self.entry_value_so = DoubleVar(right_frame, value=reactor.So)
-        self.enter_so = Entry(right_frame, textvariable=self.entry_value_so).pack(padx=5, pady=5)
+        self.entry_value_sno = DoubleVar(self.entry_frame, value=reactor.Sno)
+        self.enter_sno = Entry(self.entry_frame, textvariable=self.entry_value_sno).pack(padx=5, pady=5)
 
-        self.entry_value_time = DoubleVar(right_frame, value=reactor.t[-1])
-        self.enter_time = Entry(right_frame, textvariable=self.entry_value_time).pack(padx=5, pady=5, anchor = W)
+        self.entry_value_so = DoubleVar(self.entry_frame, value=reactor.So)
+        self.enter_so = Entry(self.entry_frame, textvariable=self.entry_value_so).pack(padx=5, pady=5)
+
+        self.entry_value_time = DoubleVar(self.entry_frame, value=reactor.t[-1])
+        self.enter_time = Entry(self.entry_frame, textvariable=self.entry_value_time).pack(padx=5, pady=5)
 
 
         # Labels
-        define = Frame(left_frame, width=90, height=185)
-        define.pack(side='left', fill='both', padx=5, pady=5, expand=True)
+
 
         # labels for values in real time
         self.show_xbh = Label(self.values_frame, textvariable=self.entry_value_xbh, font="none 12 bold")
@@ -116,11 +120,11 @@ class Simulator:
         Label(define, text="krok", font="none 12 bold").pack(padx=5, pady=8)
 
         # Buttons
-        Button(right_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(
+        Button(self.entry_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(
             side='bottom', padx=5, pady=5)
-        Button(right_frame, text="Pokaż wykres", width="15", command=lambda: self.obrazek()).pack(side='bottom', padx=5,
+        Button(self.entry_frame, text="Pokaż wykres", width="15", command=lambda: self.obrazek()).pack(side='bottom', padx=5,
                                                                                                   pady=5)
-        Button(right_frame, text="Wyzeruj", width="15", command=lambda: self.wyzeruj()).pack(
+        Button(self.entry_frame, text="Wyzeruj", width="15", command=lambda: self.wyzeruj()).pack(
             side='bottom', padx=5,
             pady=5)
 
