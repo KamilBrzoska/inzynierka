@@ -1,11 +1,8 @@
-import sys
 import test
 import time
 import csv
 import os
-import matplotlib.image as mpimg
 import atexit
-import numpy as np
 
 model = test.Settler()
 
@@ -24,8 +21,8 @@ def makesimulation(add_time,add_time1):
     with open('data.csv', 'w') as csv_file:
         csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         csv_writer.writeheader()
-    # try:
-    while only_for_close_function == True:
+
+    while only_for_close_function:
         with open('data.csv', 'a') as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             Step = next(model)
@@ -82,23 +79,5 @@ def makesimulation(add_time,add_time1):
             # print(Xbh, Xba, Ss, Xs, Xp, Xnd, Snd, Snh, Sno, So, model.t)
 
         time.sleep(1)
-        # if Xnd >= 200:
-        #     img = mpimg.imread('livelong.jpeg')
-        #     imgplot = plt.imshow(img)
-        #     plt.show()
-
 
 atexit.register(exit_handler)
-
-# except KeyboardInterrupt:
-#     os.remove("data.csv")
-
-# ask = input('czy chcesz zapisac dane? (tak/nie): ')
-# if ask == 'nie':
-#     os.remove("data.csv")
-#     print("File Removed!")
-# else:
-#     print("File Saved!")
-#     sys.exit()
-
-# makesimulation()

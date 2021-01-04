@@ -36,13 +36,13 @@ class Simulator:
 
         # initself.entry_frame
         self.entry_value_xbh = DoubleVar(self.entry_frame, value=reactor.Xbh)
-        self.enter_xbh = Entry(self.entry_frame, textvariable=self.entry_value_xbh).pack(padx=5, pady = 5)
+        self.enter_xbh = Entry(self.entry_frame, textvariable=self.entry_value_xbh).pack(padx=5, pady=5)
 
         self.entry_value_xba = DoubleVar(self.entry_frame, value=reactor.Xba)
-        self.enter_xba = Entry(self.entry_frame, textvariable=self.entry_value_xba).pack(padx=5, pady = 5)
+        self.enter_xba = Entry(self.entry_frame, textvariable=self.entry_value_xba).pack(padx=5, pady=5)
 
         self.entry_value_ss = DoubleVar(self.entry_frame, value=reactor.Ss)
-        self.enter_ss = Entry(self.entry_frame, textvariable=self.entry_value_ss).pack(padx=5, pady = 5)
+        self.enter_ss = Entry(self.entry_frame, textvariable=self.entry_value_ss).pack(padx=5, pady=5)
 
         self.entry_value_xs = DoubleVar(self.entry_frame, value=reactor.Xs)
         self.enter_xs = Entry(self.entry_frame, textvariable=self.entry_value_xs).pack(padx=5, pady=5)
@@ -68,9 +68,25 @@ class Simulator:
         self.entry_value_time = DoubleVar(self.entry_frame, value=reactor.t[-1])
         self.enter_time = Entry(self.entry_frame, textvariable=self.entry_value_time).pack(padx=5, pady=5)
 
+        self.entry_value_ssd = DoubleVar(self.entry_frame, value=reactor.Ssd)
+        self.enter_ssd = Entry(self.entry_frame, textvariable=self.entry_value_ssd).pack(padx=5, pady=5)
+
+        self.entry_value_sndd = DoubleVar(self.entry_frame, value=reactor.Sndd)
+        self.enter_sndd = Entry(self.entry_frame, textvariable=self.entry_value_sndd).pack(padx=5, pady=5)
+
+        self.entry_value_snhd = DoubleVar(self.entry_frame, value=reactor.Snhd)
+        self.enter_snhd = Entry(self.entry_frame, textvariable=self.entry_value_snhd).pack(padx=5, pady=5)
+
+        self.entry_value_snod = DoubleVar(self.entry_frame, value=reactor.Snod)
+        self.enter_snod = Entry(self.entry_frame, textvariable=self.entry_value_snod).pack(padx=5, pady=5)
+
+        self.entry_value_sod = DoubleVar(self.entry_frame, value=reactor.Sod)
+        self.enter_sod = Entry(self.entry_frame, textvariable=self.entry_value_sod).pack(padx=5, pady=5)
+
+        self.entry_value_qd = DoubleVar(self.entry_frame, value=reactor.Qd)
+        self.enter_qd = Entry(self.entry_frame, textvariable=self.entry_value_qd).pack(padx=5, pady=5)
 
         # Labels
-
 
         # labels for values in real time
         self.show_xbh = Label(self.values_frame, textvariable=self.entry_value_xbh, font="none 12 bold")
@@ -106,6 +122,24 @@ class Simulator:
         self.show_time = Label(self.values_frame, textvariable=self.entry_value_so, font="none 12 bold")
         self.show_time.pack(padx=5, pady=8)
 
+        self.show_ssd = Label(self.values_frame, textvariable=self.entry_value_ssd, font="none 12 bold")
+        self.show_ssd.pack(padx=5, pady=7)
+
+        self.show_sndd = Label(self.values_frame, textvariable=self.entry_value_sndd, font="none 12 bold")
+        self.show_sndd.pack(padx=5, pady=7)
+
+        self.show_snhd = Label(self.values_frame, textvariable=self.entry_value_snhd, font="none 12 bold")
+        self.show_snhd.pack(padx=5, pady=7)
+
+        self.show_snod = Label(self.values_frame, textvariable=self.entry_value_snod, font="none 12 bold")
+        self.show_snod.pack(padx=5, pady=7)
+
+        self.show_sod = Label(self.values_frame, textvariable=self.entry_value_sod, font="none 12 bold")
+        self.show_sod.pack(padx=5, pady=7)
+
+        self.show_qd = Label(self.values_frame, textvariable=self.entry_value_qd, font="none 12 bold")
+        self.show_qd.pack(padx=5, pady=7)
+
         # Label(define, text='Symulator', bg="black", fg="white", font="none 12 bold").pack()
         Label(define, text="Xbh", font="none 12 bold").pack(padx=5, pady=7)
         Label(define, text="Xba", font="none 12 bold").pack(padx=5, pady=7)
@@ -118,21 +152,31 @@ class Simulator:
         Label(define, text="Sno", font="none 12 bold").pack(padx=5, pady=7)
         Label(define, text="So", font="none 12 bold").pack(padx=5, pady=7)
         Label(define, text="krok", font="none 12 bold").pack(padx=5, pady=8)
+        Label(define, text="SS dopływ", font="none 12 bold").pack(padx=5, pady=8)
+        Label(define, text="Snd dopływ", font="none 12 bold").pack(padx=5, pady=8)
+        Label(define, text="Snh dopływ", font="none 12 bold").pack(padx=5, pady=8)
+        Label(define, text="Sno dopływ", font="none 12 bold").pack(padx=5, pady=8)
+        Label(define, text="So dopływ", font="none 12 bold").pack(padx=5, pady=8)
+        Label(define, text="Natężenie przepływu", font="none 12 bold").pack(padx=5, pady=8)
 
         # Buttons
         Button(self.entry_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(
-            side='bottom', padx=5, pady=5)
-        Button(self.entry_frame, text="Pokaż wykres", width="15", command=lambda: self.obrazek()).pack(side='bottom', padx=5,
-                                                                                                  pady=5)
+            side='top', padx=5, pady=5)
+        Button(self.entry_frame, text="Pokaż wykres", width="15", command=lambda: self.obrazek()).pack(side='top',
+                                                                                                       padx=5,
+                                                                                                       pady=5)
         Button(self.entry_frame, text="Wyzeruj", width="15", command=lambda: self.wyzeruj()).pack(
             side='bottom', padx=5,
+            pady=5)
+
+        Button(self.entry_frame, text="Zmień dopływ", width="15", command=lambda: self.inflow()).pack(
+            side='top', padx=5,
             pady=5)
 
     def start_simulation(self):
         if os.path.isfile("data.csv"):
             print("Najpierw zakoncz poprzednia symulacje")
         else:
-
 
             xbh1 = float(self.entry_value_xbh.get())
             file_csv.model.Xbh = xbh1
@@ -173,14 +217,13 @@ class Simulator:
             file_csv.makesimulation.add_time1 = t
 
             file_csv.only_for_close_function = True
-            _thread.start_new_thread(file_csv.makesimulation, (t,t))
-
+            _thread.start_new_thread(file_csv.makesimulation, (t, t))
 
     def obrazek(self):
         x = hasattr(self, 'canvas')
-        if x == True:
+        if x:
             print("najpiew zakoncz poprzednia operacje")
-        elif x == False:
+        elif not x:
             self.graph_frame = Frame(window, width=400, height=400, bg='grey')
             self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
             self.x = reactor_ASM1.graphs
@@ -193,13 +236,13 @@ class Simulator:
 
     def wyzeruj(self):
         x1 = hasattr(self, 'canvas')
-        if x1 == True:
+        if x1:
             for item in self.canvas.get_tk_widget().find_all():
                 self.canvas.get_tk_widget().delete(item)
             del self.canvas
             self.graph_frame.destroy()
 
-        elif x1 == False:
+        elif not x1:
             print("Symulacja zostala juz zakonczona")
 
         file_csv.only_for_close_function = False
@@ -209,6 +252,25 @@ class Simulator:
             os.remove("data.csv")
         else:
             print("symulacja zostala juz zakonczona")
+
+    def inflow(self):
+        ssd1 = float(self.entry_value_ssd.get())
+        file_csv.model.Ssd = ssd1
+
+        sndd1 = float(self.entry_value_sndd.get())
+        file_csv.model.Sndd = sndd1
+
+        snhd1 = float(self.entry_value_snhd.get())
+        file_csv.model.Snhd = snhd1
+
+        snod1 = float(self.entry_value_snod.get())
+        file_csv.model.Snod = snod1
+
+        sod1 = float(self.entry_value_sod.get())
+        file_csv.model.Sod = sod1
+
+        qd1 = float(self.entry_value_qd.get())
+        file_csv.model.Qd = qd1
 
     def label(self):
         pocz0 = DoubleVar()
@@ -255,6 +317,30 @@ class Simulator:
         pocz_time.set(round(file_csv.model.t[-1], 10))
         self.show_time.config(textvariable=pocz_time)
 
+        pocz_ssd = DoubleVar(value=file_csv.model.Ssd)
+        pocz_ssd.set(round(file_csv.model.Ssd, 10))
+        self.show_ssd.config(textvariable=pocz_ssd)
+
+        pocz_sndd = DoubleVar(value=file_csv.model.Sndd)
+        pocz_sndd.set(round(file_csv.model.Sndd, 10))
+        self.show_sndd.config(textvariable=pocz_sndd)
+
+        pocz_snhd = DoubleVar(value=file_csv.model.Snhd)
+        pocz_snhd.set(round(file_csv.model.Snhd, 10))
+        self.show_snhd.config(textvariable=pocz_snhd)
+
+        pocz_snod = DoubleVar(value=file_csv.model.Snod)
+        pocz_snod.set(round(file_csv.model.Snod, 10))
+        self.show_snod.config(textvariable=pocz_snod)
+
+        pocz_sod = DoubleVar(value=file_csv.model.Sod)
+        pocz_sod.set(round(file_csv.model.Sod, 10))
+        self.show_sod.config(textvariable=pocz_sod)
+
+        pocz_qd = DoubleVar(value=file_csv.model.Qd)
+        pocz_qd.set(round(file_csv.model.Qd, 10))
+        self.show_qd.config(textvariable=pocz_qd)
+
         window.after(1000, self.label)
 
 
@@ -262,14 +348,5 @@ window = Tk()
 window.maxsize(1800, 1200)
 window.configure(background="black")
 gui = Simulator(window)
-# window.after(1000, gui.label())
 gui.label()
 window.mainloop()
-
-# window.protocol("WM_DELETE_WINDOW", on_closing)
-
-
-# def on_closing():
-#     messagebox.askokcancel(title="hello", message="hello")
-#     if messagebox.askokcancel("Quit", "Do you want to quit?"):
-#         window.destroy()

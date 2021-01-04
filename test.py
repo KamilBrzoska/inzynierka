@@ -187,15 +187,12 @@ class Settler(reactor_ASM1):
         # generowanie losowych wartości X dla każdej warstwy
         self.i = 0
         self.Xin = self.Xbh + self.Xba + self.Xs + self.Xp + self.Xnd
-        # self.X = np.random.random(self.n)
-        # self.X /= self.X.sum()
-        # self.X *= self.Xin
-        #
+
         self.nv = 10
-        self.Qcl = 30
-        self.Qth = 70
-        self.Qin = 100
-        self.A = 50
+        self.Qin = self.Qw
+        self.Qcl = 0.3 * self.Qin
+        self.Qth = 0.7 * self.Qin
+        self.A = 5
         self.H = 100
         self.v0 = 10
         self.X1 = 0
@@ -208,6 +205,7 @@ class Settler(reactor_ASM1):
         self.X8 = 0
         self.X9 = 0
         self.X10 = 0.000000001
+
 
         #recykl
         self.Xbhw = 0
@@ -316,6 +314,10 @@ class Settler(reactor_ASM1):
         self.So2 = ((rownania[9] * self.V) + (self.Sod * self.Qd) - (rownania[9] * self.Qw)) / self.V
         return self.Xbh2, self.Xba2, self.Ss2, self.Xs2, self.Xp2, self.Xnd2, self.Snd2, self.Snh2, self.Sno2, self.So2
 
+    def aeration(self):
+        pass
+
+
     def __iter__(self):
         return
 
@@ -355,6 +357,7 @@ class Settler(reactor_ASM1):
         self.X8 = solv[1][7]
         self.X9 = solv[1][8]
         self.X10 = solv[1][9]
+        self.So += 0.001 * (10 - self.So)
         return self.Xbh, self.Xba, self.Ss, self.Xs, self.Xp, self.Xnd, self.Snd, self.Snh, self.Sno, self.So, s0, s1, s2, s3, s4, s5, s6, s7, s8, s9
 
 
