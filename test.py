@@ -1,4 +1,5 @@
 import numpy as np
+from matplotlib.collections import LineCollection
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -9,7 +10,7 @@ from math import e
 class reactor_ASM1:
 
     def __init__(self):
-        #parametry początkowe
+        # parametry początkowe
         self.Xbh = 0.1
         self.Xba = 0.1
         self.Ss = 0.32
@@ -21,15 +22,18 @@ class reactor_ASM1:
         self.Sno = 0.02
         self.So = 0.5
 
-        #dopływ
+        # dopływ
+        self.Xsd = 0.1
+        self.Xpd = 0.2
+        self.Xndd = 0.001
         self.Ssd = 0.32
         self.Sndd = 0.002
         self.Snhd = 0.9
-        self.Snod = 0.02
-        self.Sod = 0.5
-        self.Qd = 5 #przepływ dopływu
+        self.Snod = 0.0
+        self.Sod = 0.0
+        self.Qd = 5  # natężenie przepływu w dopływie
 
-        #pozostałe parametry
+        # pozostałe parametry
         self.Uh = 6.98  #
         self.Ks = 0.3  #
         self.Koh = 0.156  #
@@ -50,7 +54,7 @@ class reactor_ASM1:
         self.Ya = 0.206  #
         self.Ixp = 0.068  #
         self.t = [0.0, 0.1]
-        self.V = 100 #objętośc reaktora
+        self.V = 100  # objętośc reaktora
         self.Qw = self.Qd
         # self.n = 0.1
         # self.t = np.linspace(0, self.n, 10)
@@ -103,7 +107,7 @@ class reactor_ASM1:
 
         DSoDT = -self.Uh * ((1 - self.Yh) / self.Yh) * (self.Ss / (self.Ks + self.Ss)) * (
                 self.So / (self.Koh + self.So)) * self.Xbh - self.Ua * ((4.57 - self.Ya) / self.Ya) * (
-                        self.Snh / (self.Knh + self.Snh)) * (self.So / (self.Koa + self.So)) * self.Xba
+                        self.Snh / (self.Knh + self.Snh)) * (self.So / (self.Koa + self.So)) * self.Xba + 0.01 * (10 - self.So)
 
         return [DXbhDT, DXbaDT, DSsDT, DXsDT, DXpDT, DXndDT, DSndDT, DSnhDT, DSnoDT, DSoDT]
 
@@ -125,7 +129,6 @@ class reactor_ASM1:
         self.Sno1 = r[1][8]
         self.So1 = r[1][9]
         return self.Xbh1, self.Xba1, self.Ss1, self.Xs1, self.Xp1, self.Xnd1, self.Snd1, self.Snh1, self.Sno1, self.So1
-
 
     def graphs(i):
         data = pd.read_csv('data.csv')
@@ -155,10 +158,6 @@ class reactor_ASM1:
         plt.legend(loc='upper left')
         plt.gca().xaxis.set_major_locator(mticker.MaxNLocator())
         plt.tight_layout()
-
-    def suma(self):
-        summ = self.Xbh + self.Xba + self.Xs + self.Xp + self.Xnd
-        return summ
 
     # def __iter__(self):
     #     return
@@ -206,13 +205,29 @@ class Settler(reactor_ASM1):
         self.X9 = 0
         self.X10 = 0.000000001
 
-
-        #recykl
+        # recykl
         self.Xbhw = 0
         self.Xbaw = 0
         self.Xsw = 0
         self.Xpw = 0
         self.Xndw = 0
+
+    def graphs_settler(i):
+        data = pd.read_csv('data.csv')
+
+        x = [data['layer1'], data['layer2']]
+        y = np.array([1, 2])
+
+        plt.cla()
+        # plt.plot(x, y, label='Xbh')
+
+        my_xticks = ['a', 'b']
+        plt.xticks(np.arange(len(data['layer1'])), np.arange(1, len(data['layer1'])+1))
+        plt.plot(x, y)
+
+        plt.legend(loc='upper left')
+        plt.gca().xaxis.set_major_locator(mticker.MaxNLocator())
+        plt.tight_layout()
 
     ## funkcje prędkości sedymentacji
     def vs1(self):
@@ -290,13 +305,15 @@ class Settler(reactor_ASM1):
     def recykl(self):
         self.rec = (self.Qth * self.X10) / self.A
         if self.rec == 0:
-            print("recykl = 0")
+            pass
         else:
-            self.Xbhw = self.rec * (self.Xbh / self.rec)
-            self.Xbaw = self.rec * (self.Xba / self.rec)
-            self.Xsw = self.rec * (self.Xs / self.rec)
-            self.Xpw = self.rec * (self.Xp / self.rec)
-            self.Xndw = self.rec * (self.Xnd / self.rec)
+            print(self.Xin)
+            print(self.rec)
+            self.Xbhw = self.Xbh * (self.rec / self.Xin)
+            self.Xbaw = self.Xba * (self.rec / self.Xin)
+            self.Xsw = self.Xs * (self.rec / self.Xin)
+            self.Xpw = self.Xp * (self.rec / self.Xin)
+            self.Xndw = self.Xnd * (self.rec / self.Xin)
         return self.rec, self.Xbhw, self.Xbaw, self.Xsw, self.Xpw, self.Xndw
 
     def masa(self):
@@ -305,9 +322,9 @@ class Settler(reactor_ASM1):
         self.Xbh2 = ((rownania[0] * self.V) + recykl[1] - (rownania[0] * self.Qw)) / self.V
         self.Xba2 = ((rownania[1] * self.V) + recykl[2] - (rownania[1] * self.Qw)) / self.V
         self.Ss2 = ((rownania[2] * self.V) + (self.Ssd * self.Qd) - (rownania[2] * self.Qw)) / self.V
-        self.Xs2 = ((rownania[3] * self.V) + recykl[3] - (rownania[3] * self.Qw)) / self.V
-        self.Xp2 = ((rownania[4] * self.V) + recykl[4] - (rownania[4] * self.Qw)) / self.V
-        self.Xnd2 = ((rownania[5] * self.V) + recykl[5] - (rownania[5] * self.Qw)) / self.V
+        self.Xs2 = ((rownania[3] * self.V) + recykl[3] + (self.Xsd * self.Qd) - (rownania[3] * self.Qw)) / self.V
+        self.Xp2 = ((rownania[4] * self.V) + recykl[4] + (self.Xpd * self.Qd) - (rownania[4] * self.Qw)) / self.V
+        self.Xnd2 = ((rownania[5] * self.V) + recykl[5] + (self.Xnd * self.Qd) - (rownania[5] * self.Qw)) / self.V
         self.Snd2 = ((rownania[6] * self.V) + (self.Sndd * self.Qd) - (rownania[6] * self.Qw)) / self.V
         self.Snh2 = ((rownania[7] * self.V) + (self.Snhd * self.Qd) - (rownania[7] * self.Qw)) / self.V
         self.Sno2 = ((rownania[8] * self.V) + (self.Snod * self.Qd) - (rownania[8] * self.Qw)) / self.V
@@ -316,7 +333,6 @@ class Settler(reactor_ASM1):
 
     def aeration(self):
         pass
-
 
     def __iter__(self):
         return
@@ -357,8 +373,4 @@ class Settler(reactor_ASM1):
         self.X8 = solv[1][7]
         self.X9 = solv[1][8]
         self.X10 = solv[1][9]
-        self.So += 0.001 * (10 - self.So)
         return self.Xbh, self.Xba, self.Ss, self.Xs, self.Xp, self.Xnd, self.Snd, self.Snh, self.Sno, self.So, s0, s1, s2, s3, s4, s5, s6, s7, s8, s9
-
-
-

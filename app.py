@@ -1,6 +1,7 @@
 import os
 from tkinter import *
 from test import reactor_ASM1
+from test import Settler
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import file_csv
 import _thread
@@ -8,6 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 reactor = reactor_ASM1()
+settler = Settler()
 
 
 class Simulator:
@@ -169,7 +171,11 @@ class Simulator:
             side='bottom', padx=5,
             pady=5)
 
-        Button(self.entry_frame, text="Zmień dopływ", width="15", command=lambda: self.inflow()).pack(
+        # Button(self.entry_frame, text="Zmień dopływ", width="15", command=lambda: self.inflow()).pack(
+        #     side='top', padx=5,
+        #     pady=5)
+
+        Button(self.entry_frame, text="Wykres osadnika", width="15", command=lambda: self.graph_settler()).pack(
             side='top', padx=5,
             pady=5)
 
@@ -233,6 +239,17 @@ class Simulator:
             self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
             self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
             self.canvas.draw()
+
+    def graph_settler(self):
+        self.graph_frame = Frame(window, width=400, height=400, bg='grey')
+        self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
+        self.x = Settler.graphs_settler
+        self.figure1 = plt.gcf()
+        self.canvas = FigureCanvasTkAgg(self.figure1, master=self.graph_frame)
+
+        self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+        self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
+        self.canvas.draw()
 
     def wyzeruj(self):
         x1 = hasattr(self, 'canvas')
