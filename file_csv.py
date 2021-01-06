@@ -6,6 +6,7 @@ import atexit
 
 model = test.Settler()
 
+
 def exit_handler():
     try:
         os.remove("data.csv")
@@ -16,7 +17,7 @@ def exit_handler():
 only_for_close_function = True
 
 
-def makesimulation(add_time,add_time1):
+def makesimulation(add_time, add_time1):
     fieldnames = ["Xbh", "Xba", "Ss", "Xs", "Xp", "Xnd", "Snd", "Snh", "Sno", "So", "t", "layer1", "layer2",
                   "layer3", "layer4", "layer5", "layer6", "layer7", "layer8", "layer9", "layer10"]
     with open('data.csv', 'w') as csv_file:
@@ -57,7 +58,6 @@ def makesimulation(add_time,add_time1):
             layer8 = Step[17]
             layer9 = Step[18]
             layer10 = Step[19]
-
 
             info = {
                 "Xbh": Xbh,
@@ -101,5 +101,6 @@ def makesimulation(add_time,add_time1):
             # print(Xbh, Xba, Ss, Xs, Xp, Xnd, Snd, Snh, Sno, So, model.t)
 
         time.sleep(1)
+
 
 atexit.register(exit_handler)

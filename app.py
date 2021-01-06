@@ -1,6 +1,6 @@
 import os
 from tkinter import *
-from test import reactor_ASM1
+from test import Reactor
 from test import Settler
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import file_csv
@@ -8,7 +8,7 @@ import _thread
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-reactor = reactor_ASM1()
+reactor = Reactor()
 settler = Settler()
 
 
@@ -30,12 +30,10 @@ class Scrollable(Frame):
         self.windows_item = self.canvas.create_window(0, 0, window=self, anchor='nw')
 
     def __fill_canvas(self, event):
-
         canvas_width = event.width
         self.canvas.itemconfig(self.windows_item, width=canvas_width)
 
     def update(self):
-
         self.update_idletasks()
         self.canvas.config(scrollregion=self.canvas.bbox(self.windows_item))
 
@@ -103,6 +101,9 @@ class Simulator:
         Label(self.entry_frame, text="Parametry dopływu", font="none 12 bold").pack(padx=5, pady=5)
 
         # doplyw
+        self.entry_value_kla = DoubleVar(self.entry_frame, value=reactor.kla)
+        self.enter_kla = Entry(self.entry_frame, textvariable=self.entry_value_kla).pack(padx=5, pady=5)
+
         self.entry_value_xsd = DoubleVar(self.entry_frame, value=reactor.Xsd)
         self.enter_xsd = Entry(self.entry_frame, textvariable=self.entry_value_xsd).pack(padx=5, pady=5)
 
@@ -167,8 +168,11 @@ class Simulator:
         self.show_time.pack(padx=5, pady=8)
         # doplyw
 
-        self.show_nothing = Label(self.values_frame, text = "", font="none 12 bold")
+        self.show_nothing = Label(self.values_frame, text="", font="none 12 bold")
         self.show_nothing.pack(padx=5, pady=7)
+
+        self.show_kla = Label(self.values_frame, textvariable=self.entry_value_kla, font="none 12 bold")
+        self.show_kla.pack(padx=5, pady=7)
 
         self.show_xsd = Label(self.values_frame, textvariable=self.entry_value_xsd, font="none 12 bold")
         self.show_xsd.pack(padx=5, pady=7)
@@ -210,6 +214,7 @@ class Simulator:
         Label(self.define, text="So", font="none 12 bold").pack(padx=5, pady=7)
         Label(self.define, text="krok", font="none 12 bold").pack(padx=5, pady=8)
         Label(self.define, text="", font="none 12 bold").pack(padx=5, pady=8)
+        Label(self.define, text="kLa", font="none 12 bold").pack(padx=5, pady=8)
         Label(self.define, text="Xs dopływ", font="none 12 bold").pack(padx=5, pady=8)
         Label(self.define, text="Xp dopływ", font="none 12 bold").pack(padx=5, pady=8)
         Label(self.define, text="Xnd dopływ", font="none 12 bold").pack(padx=5, pady=6)
@@ -219,7 +224,6 @@ class Simulator:
         Label(self.define, text="Sno dopływ", font="none 12 bold").pack(padx=5, pady=8)
         Label(self.define, text="So dopływ", font="none 12 bold").pack(padx=5, pady=8)
         Label(self.define, text="Natężenie przepływu", font="none 12 bold").pack(padx=5, pady=8)
-
 
         # Buttons
         Button(self.entry_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(
@@ -282,45 +286,128 @@ class Simulator:
             file_csv.makesimulation.add_time = t
             file_csv.makesimulation.add_time1 = t
 
+            kla1 = float(self.entry_value_kla.get())
+            file_csv.model.kla = kla1
+
+            xsd1 = float(self.entry_value_xsd.get())
+            file_csv.model.Xsd = xsd1
+
+            xpd1 = float(self.entry_value_xpd.get())
+            file_csv.model.Xpd = xpd1
+
+            xndd1 = float(self.entry_value_xndd.get())
+            file_csv.model.Xndd = xndd1
+
+            ssd1 = float(self.entry_value_ssd.get())
+            file_csv.model.Ssd = ssd1
+
+            sndd1 = float(self.entry_value_sndd.get())
+            file_csv.model.Sndd = sndd1
+
+            snhd1 = float(self.entry_value_snhd.get())
+            file_csv.model.Snhd = snhd1
+
+            snod1 = float(self.entry_value_snod.get())
+            file_csv.model.Snod = snod1
+
+            sod1 = float(self.entry_value_sod.get())
+            file_csv.model.Sod = sod1
+
+            qd1 = float(self.entry_value_qd.get())
+            file_csv.model.Qd = qd1
+
             file_csv.only_for_close_function = True
             _thread.start_new_thread(file_csv.makesimulation, (t, t))
 
     def obrazek(self):
-        x = hasattr(self, 'canvas')
-        if x:
-            print("najpiew zakoncz poprzednia operacje")
-        elif not x:
-            self.graph_frame = Frame(window, width=400, height=400, bg='grey')
-            self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
-            self.x = reactor_ASM1.graphs
-            self.figure1 = plt.gcf()
-            self.canvas = FigureCanvasTkAgg(self.figure1, master=self.graph_frame)
+        if os.path.isfile("data.csv"):
+            x = hasattr(self, 'figure1')
+            if x:
+                print("najpiew zakoncz symulacja")
+            elif not x:
+                x1 = hasattr(self, 'figure2')
+                if x1:
+                    for item in self.canvas.get_tk_widget().find_all():
+                        self.canvas.get_tk_widget().delete(item)
+                    del self.canvas
+                    del self.figure2
+                    self.graph_frame.destroy()
 
-            self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
-            self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
-            self.canvas.draw()
+                    self.graph_frame = Frame(window, width=400, height=400, bg='grey')
+                    self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
+                    self.x = Reactor.graphs
+                    self.figure1 = plt.gcf()
+                    self.canvas = FigureCanvasTkAgg(self.figure1, master=self.graph_frame)
+
+                    self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+                    self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
+                    self.canvas.draw()
+
+                elif not x1:
+                    self.graph_frame = Frame(window, width=400, height=400, bg='grey')
+                    self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
+                    self.x = Reactor.graphs
+                    self.figure1 = plt.gcf()
+                    self.canvas = FigureCanvasTkAgg(self.figure1, master=self.graph_frame)
+
+                    self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+                    self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
+                    self.canvas.draw()
+        else:
+            print("najpierw rozpocznij symulacje")
 
     def graph_settler(self):
-        self.graph_frame = Frame(window, width=400, height=400, bg='grey')
-        self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
-        self.x = Settler.graphs_settler
-        self.figure1 = plt.gcf()
-        self.canvas = FigureCanvasTkAgg(self.figure1, master=self.graph_frame)
+        if os.path.isfile("data.csv"):
+            x = hasattr(self, 'figure2')
+            if x:
+                print("najpiew zakoncz symulacje")
+            elif not x:
+                x1 = hasattr(self, 'figure1')
+                if x1:
+                    for item in self.canvas.get_tk_widget().find_all():
+                        self.canvas.get_tk_widget().delete(item)
+                    del self.canvas
+                    del self.figure1
+                    self.graph_frame.destroy()
 
-        self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
-        self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
-        self.canvas.draw()
+                    self.graph_frame = Frame(window, width=400, height=400, bg='grey')
+                    self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
+                    self.x = Settler.graphs_settler
+                    self.figure2 = plt.gcf()
+                    self.canvas = FigureCanvasTkAgg(self.figure2, master=self.graph_frame)
+
+                    self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+                    self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
+                    self.canvas.draw()
+                elif not x1:
+                    self.graph_frame = Frame(window, width=400, height=400, bg='grey')
+                    self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
+                    self.x = Settler.graphs_settler
+                    self.figure2 = plt.gcf()
+                    self.canvas = FigureCanvasTkAgg(self.figure2, master=self.graph_frame)
+
+                    self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+                    self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
+                    self.canvas.draw()
+        else:
+            print("najpierw rozpocznij symulacje")
 
     def wyzeruj(self):
         x1 = hasattr(self, 'canvas')
+        x2 = hasattr(self, 'figure1')
+        x3 = hasattr(self, 'figure2')
         if x1:
             for item in self.canvas.get_tk_widget().find_all():
                 self.canvas.get_tk_widget().delete(item)
             del self.canvas
             self.graph_frame.destroy()
-
         elif not x1:
             print("Symulacja zostala juz zakonczona")
+
+        if x2:
+            del self.figure1
+        if x3:
+            del self.figure2
 
         file_csv.only_for_close_function = False
         file_csv.model.t = [0.0, 0.1]
@@ -331,6 +418,9 @@ class Simulator:
             print("symulacja zostala juz zakonczona")
 
     def inflow(self):
+        kla1 = float(self.entry_value_kla.get())
+        file_csv.model.kla = kla1
+
         xsd1 = float(self.entry_value_xsd.get())
         file_csv.model.Xsd = xsd1
 
@@ -402,6 +492,10 @@ class Simulator:
         pocz_time = DoubleVar(value=file_csv.model.t[-1])
         pocz_time.set(round(file_csv.model.t[-1], 10))
         self.show_time.config(textvariable=pocz_time)
+
+        pocz_kla = DoubleVar(value=file_csv.model.kla)
+        pocz_kla.set(round(file_csv.model.kla, 10))
+        self.show_kla.config(textvariable=pocz_kla)
 
         pocz_xsd = DoubleVar(value=file_csv.model.Xsd)
         pocz_xsd.set(round(file_csv.model.Xsd, 10))
