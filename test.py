@@ -56,6 +56,7 @@ class reactor_ASM1:
         self.t = [0.0, 0.1]
         self.V = 100  # objętośc reaktora
         self.Qw = self.Qd
+        self.kla = 0.05
         # self.n = 0.1
         # self.t = np.linspace(0, self.n, 10)
 
@@ -107,7 +108,8 @@ class reactor_ASM1:
 
         DSoDT = -self.Uh * ((1 - self.Yh) / self.Yh) * (self.Ss / (self.Ks + self.Ss)) * (
                 self.So / (self.Koh + self.So)) * self.Xbh - self.Ua * ((4.57 - self.Ya) / self.Ya) * (
-                        self.Snh / (self.Knh + self.Snh)) * (self.So / (self.Koa + self.So)) * self.Xba + 0.01 * (10 - self.So)
+                        self.Snh / (self.Knh + self.Snh)) * (self.So / (self.Koa + self.So)) * self.Xba + self.kla \
+                * (10 - self.So)
 
         return [DXbhDT, DXbaDT, DSsDT, DXsDT, DXpDT, DXndDT, DSndDT, DSnhDT, DSnoDT, DSoDT]
 
@@ -203,7 +205,7 @@ class Settler(reactor_ASM1):
         self.X7 = 0
         self.X8 = 0
         self.X9 = 0
-        self.X10 = 0.000000001
+        self.X10 = 0
 
         # recykl
         self.Xbhw = 0
@@ -307,8 +309,6 @@ class Settler(reactor_ASM1):
         if self.rec == 0:
             pass
         else:
-            print(self.Xin)
-            print(self.rec)
             self.Xbhw = self.Xbh * (self.rec / self.Xin)
             self.Xbaw = self.Xba * (self.rec / self.Xin)
             self.Xsw = self.Xs * (self.rec / self.Xin)

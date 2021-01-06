@@ -12,29 +12,58 @@ reactor = reactor_ASM1()
 settler = Settler()
 
 
+class Scrollable(Frame):
+
+    def __init__(self, frame, width=16):
+        scrollbar = Scrollbar(frame, width=width)
+        scrollbar.pack(side='right', fill='y', expand=False)
+
+        self.canvas = Canvas(frame, yscrollcommand=scrollbar.set)
+        self.canvas.pack(side='left', fill='both', expand=True)
+
+        scrollbar.config(command=self.canvas.yview)
+
+        self.canvas.bind('<Configure>', self.__fill_canvas)
+
+        Frame.__init__(self, frame)
+
+        self.windows_item = self.canvas.create_window(0, 0, window=self, anchor='nw')
+
+    def __fill_canvas(self, event):
+
+        canvas_width = event.width
+        self.canvas.itemconfig(self.windows_item, width=canvas_width)
+
+    def update(self):
+
+        self.update_idletasks()
+        self.canvas.config(scrollregion=self.canvas.bbox(self.windows_item))
+
+
 class Simulator:
     def __init__(self, master):
         self.master = master
         master.title("Symulator")
 
         # frame
-        main_frame = Frame(window, width=150, height=370, bg='grey')
-        main_frame.pack(side='left', fill='both', padx=10, pady=5)
+        self.main_frame = Frame(window, width=700, height=370, bg='grey')
+        self.main_frame.pack(side='left', fill='both', padx=5, pady=5, expand=True)
+        self.main_frame = Scrollable(self.main_frame, width=16)
 
-        left_frame = Frame(main_frame, width=90, height=185, bg='grey')
-        left_frame.pack(side='left', fill='both', padx=10, pady=5, expand=True)
+        left_frame = Frame(self.main_frame, width=500, height=185, bg='grey')
+        left_frame.pack(side='left', fill='both', padx=5, pady=5, expand=True)
 
-        right_frame = Frame(main_frame, width=90, height=185, bg='grey')
-        right_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
+        right_frame = Frame(left_frame, width=90, height=185, bg='grey')
+        right_frame.pack(side='right', fill='both', padx=5, pady=5, expand=True)
 
         self.values_frame = Frame(right_frame, width=90, height=185, bg='grey')
         self.values_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
 
-        self.entry_frame = Frame(left_frame, width=90, height=185, bg='grey')
-        self.entry_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
+        self.entry_frame = Frame(left_frame, width=45, height=185, bg='grey')
+        self.entry_frame.pack(side='right', fill='both', padx=5, pady=5, expand=True)
 
-        define = Frame(left_frame, width=90, height=185)
-        define.pack(side='left', fill='both', padx=5, pady=5, expand=True)
+        self.define = Frame(left_frame, width=300, height=185)
+        self.define.pack(side='top', fill='both', padx=5, pady=5, expand=True)
 
         # initself.entry_frame
         self.entry_value_xbh = DoubleVar(self.entry_frame, value=reactor.Xbh)
@@ -67,8 +96,21 @@ class Simulator:
         self.entry_value_so = DoubleVar(self.entry_frame, value=reactor.So)
         self.enter_so = Entry(self.entry_frame, textvariable=self.entry_value_so).pack(padx=5, pady=5)
 
+        # czas
         self.entry_value_time = DoubleVar(self.entry_frame, value=reactor.t[-1])
         self.enter_time = Entry(self.entry_frame, textvariable=self.entry_value_time).pack(padx=5, pady=5)
+
+        Label(self.entry_frame, text="Parametry dopływu", font="none 12 bold").pack(padx=5, pady=5)
+
+        # doplyw
+        self.entry_value_xsd = DoubleVar(self.entry_frame, value=reactor.Xsd)
+        self.enter_xsd = Entry(self.entry_frame, textvariable=self.entry_value_xsd).pack(padx=5, pady=5)
+
+        self.entry_value_xpd = DoubleVar(self.entry_frame, value=reactor.Xpd)
+        self.enter_xpd = Entry(self.entry_frame, textvariable=self.entry_value_xpd).pack(padx=5, pady=5)
+
+        self.entry_value_xndd = DoubleVar(self.entry_frame, value=reactor.Xndd)
+        self.enter_xndd = Entry(self.entry_frame, textvariable=self.entry_value_xndd).pack(padx=5, pady=5)
 
         self.entry_value_ssd = DoubleVar(self.entry_frame, value=reactor.Ssd)
         self.enter_ssd = Entry(self.entry_frame, textvariable=self.entry_value_ssd).pack(padx=5, pady=5)
@@ -120,15 +162,28 @@ class Simulator:
 
         self.show_so = Label(self.values_frame, textvariable=self.entry_value_so, font="none 12 bold")
         self.show_so.pack(padx=5, pady=7)
-
+        # czas
         self.show_time = Label(self.values_frame, textvariable=self.entry_value_so, font="none 12 bold")
         self.show_time.pack(padx=5, pady=8)
+        # doplyw
+
+        self.show_nothing = Label(self.values_frame, text = "", font="none 12 bold")
+        self.show_nothing.pack(padx=5, pady=7)
+
+        self.show_xsd = Label(self.values_frame, textvariable=self.entry_value_xsd, font="none 12 bold")
+        self.show_xsd.pack(padx=5, pady=7)
+
+        self.show_xpd = Label(self.values_frame, textvariable=self.entry_value_xpd, font="none 12 bold")
+        self.show_xpd.pack(padx=5, pady=7)
+
+        self.show_xndd = Label(self.values_frame, textvariable=self.entry_value_xndd, font="none 12 bold")
+        self.show_xndd.pack(padx=5, pady=7)
 
         self.show_ssd = Label(self.values_frame, textvariable=self.entry_value_ssd, font="none 12 bold")
         self.show_ssd.pack(padx=5, pady=7)
 
         self.show_sndd = Label(self.values_frame, textvariable=self.entry_value_sndd, font="none 12 bold")
-        self.show_sndd.pack(padx=5, pady=7)
+        self.show_sndd.pack(padx=5, pady=8)
 
         self.show_snhd = Label(self.values_frame, textvariable=self.entry_value_snhd, font="none 12 bold")
         self.show_snhd.pack(padx=5, pady=7)
@@ -140,26 +195,31 @@ class Simulator:
         self.show_sod.pack(padx=5, pady=7)
 
         self.show_qd = Label(self.values_frame, textvariable=self.entry_value_qd, font="none 12 bold")
-        self.show_qd.pack(padx=5, pady=7)
+        self.show_qd.pack(padx=5, pady=8)
 
         # Label(define, text='Symulator', bg="black", fg="white", font="none 12 bold").pack()
-        Label(define, text="Xbh", font="none 12 bold").pack(padx=5, pady=7)
-        Label(define, text="Xba", font="none 12 bold").pack(padx=5, pady=7)
-        Label(define, text="Ss", font="none 12 bold").pack(padx=5, pady=7)
-        Label(define, text="Xs", font="none 12 bold").pack(padx=5, pady=7)
-        Label(define, text="Xp", font="none 12 bold").pack(padx=5, pady=7)
-        Label(define, text="Xnd", font="none 12 bold").pack(padx=5, pady=8)
-        Label(define, text="Snd", font="none 12 bold").pack(padx=5, pady=7)
-        Label(define, text="Snh", font="none 12 bold").pack(padx=5, pady=8)
-        Label(define, text="Sno", font="none 12 bold").pack(padx=5, pady=7)
-        Label(define, text="So", font="none 12 bold").pack(padx=5, pady=7)
-        Label(define, text="krok", font="none 12 bold").pack(padx=5, pady=8)
-        Label(define, text="SS dopływ", font="none 12 bold").pack(padx=5, pady=8)
-        Label(define, text="Snd dopływ", font="none 12 bold").pack(padx=5, pady=8)
-        Label(define, text="Snh dopływ", font="none 12 bold").pack(padx=5, pady=8)
-        Label(define, text="Sno dopływ", font="none 12 bold").pack(padx=5, pady=8)
-        Label(define, text="So dopływ", font="none 12 bold").pack(padx=5, pady=8)
-        Label(define, text="Natężenie przepływu", font="none 12 bold").pack(padx=5, pady=8)
+        Label(self.define, text="Xbh", font="none 12 bold").pack(padx=5, pady=7)
+        Label(self.define, text="Xba", font="none 12 bold").pack(padx=5, pady=7)
+        Label(self.define, text="Ss", font="none 12 bold").pack(padx=5, pady=7)
+        Label(self.define, text="Xs", font="none 12 bold").pack(padx=5, pady=7)
+        Label(self.define, text="Xp", font="none 12 bold").pack(padx=5, pady=7)
+        Label(self.define, text="Xnd", font="none 12 bold").pack(padx=5, pady=8)
+        Label(self.define, text="Snd", font="none 12 bold").pack(padx=5, pady=7)
+        Label(self.define, text="Snh", font="none 12 bold").pack(padx=5, pady=8)
+        Label(self.define, text="Sno", font="none 12 bold").pack(padx=5, pady=7)
+        Label(self.define, text="So", font="none 12 bold").pack(padx=5, pady=7)
+        Label(self.define, text="krok", font="none 12 bold").pack(padx=5, pady=8)
+        Label(self.define, text="", font="none 12 bold").pack(padx=5, pady=8)
+        Label(self.define, text="Xs dopływ", font="none 12 bold").pack(padx=5, pady=8)
+        Label(self.define, text="Xp dopływ", font="none 12 bold").pack(padx=5, pady=8)
+        Label(self.define, text="Xnd dopływ", font="none 12 bold").pack(padx=5, pady=6)
+        Label(self.define, text="SS dopływ", font="none 12 bold").pack(padx=5, pady=6)
+        Label(self.define, text="Snd dopływ", font="none 12 bold").pack(padx=5, pady=8)
+        Label(self.define, text="Snh dopływ", font="none 12 bold").pack(padx=5, pady=8)
+        Label(self.define, text="Sno dopływ", font="none 12 bold").pack(padx=5, pady=8)
+        Label(self.define, text="So dopływ", font="none 12 bold").pack(padx=5, pady=8)
+        Label(self.define, text="Natężenie przepływu", font="none 12 bold").pack(padx=5, pady=8)
+
 
         # Buttons
         Button(self.entry_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(
@@ -171,9 +231,9 @@ class Simulator:
             side='bottom', padx=5,
             pady=5)
 
-        # Button(self.entry_frame, text="Zmień dopływ", width="15", command=lambda: self.inflow()).pack(
-        #     side='top', padx=5,
-        #     pady=5)
+        Button(self.entry_frame, text="Zmień dopływ", width="15", command=lambda: self.inflow()).pack(
+            side='top', padx=5,
+            pady=5)
 
         Button(self.entry_frame, text="Wykres osadnika", width="15", command=lambda: self.graph_settler()).pack(
             side='top', padx=5,
@@ -271,6 +331,15 @@ class Simulator:
             print("symulacja zostala juz zakonczona")
 
     def inflow(self):
+        xsd1 = float(self.entry_value_xsd.get())
+        file_csv.model.Xsd = xsd1
+
+        xpd1 = float(self.entry_value_xpd.get())
+        file_csv.model.Xpd = xpd1
+
+        xndd1 = float(self.entry_value_xndd.get())
+        file_csv.model.Xndd = xndd1
+
         ssd1 = float(self.entry_value_ssd.get())
         file_csv.model.Ssd = ssd1
 
@@ -334,6 +403,18 @@ class Simulator:
         pocz_time.set(round(file_csv.model.t[-1], 10))
         self.show_time.config(textvariable=pocz_time)
 
+        pocz_xsd = DoubleVar(value=file_csv.model.Xsd)
+        pocz_xsd.set(round(file_csv.model.Xsd, 10))
+        self.show_ssd.config(textvariable=pocz_xsd)
+
+        pocz_xpd = DoubleVar(value=file_csv.model.Xpd)
+        pocz_xpd.set(round(file_csv.model.Xpd, 10))
+        self.show_xpd.config(textvariable=pocz_xpd)
+
+        pocz_xndd = DoubleVar(value=file_csv.model.Xndd)
+        pocz_xndd.set(round(file_csv.model.Xndd, 10))
+        self.show_xndd.config(textvariable=pocz_xndd)
+
         pocz_ssd = DoubleVar(value=file_csv.model.Ssd)
         pocz_ssd.set(round(file_csv.model.Ssd, 10))
         self.show_ssd.config(textvariable=pocz_ssd)
@@ -365,5 +446,6 @@ window = Tk()
 window.maxsize(1800, 1200)
 window.configure(background="black")
 gui = Simulator(window)
+gui.main_frame.update()
 gui.label()
 window.mainloop()
