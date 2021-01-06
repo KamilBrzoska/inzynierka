@@ -18,7 +18,7 @@ class Scrollable(Frame):
         scrollbar = Scrollbar(frame, width=width)
         scrollbar.pack(side='right', fill='y', expand=False)
 
-        self.canvas = Canvas(frame, yscrollcommand=scrollbar.set)
+        self.canvas = Canvas(frame, yscrollcommand=scrollbar.set, width=300)
         self.canvas.pack(side='left', fill='both', expand=True)
 
         scrollbar.config(command=self.canvas.yview)
@@ -44,202 +44,255 @@ class Simulator:
         master.title("Symulator")
 
         # frame
-        self.main_frame = Frame(window, width=700, height=370, bg='grey')
-        self.main_frame.pack(side='left', fill='both', padx=5, pady=5, expand=True)
+        self.main_frame = Frame(window, width=300, height=370, bg='grey')
+        self.main_frame.pack(side='left', fill='both', padx=5, pady=5, expand=False)
         self.main_frame = Scrollable(self.main_frame, width=16)
+        self.main_frame.config(bg='grey')
 
-        left_frame = Frame(self.main_frame, width=500, height=185, bg='grey')
-        left_frame.pack(side='left', fill='both', padx=5, pady=5, expand=True)
+        self.xbh_frame = Frame(self.main_frame, width=300, height=185, bg='grey')
+        self.xbh_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
 
-        right_frame = Frame(left_frame, width=90, height=185, bg='grey')
-        right_frame.pack(side='right', fill='both', padx=5, pady=5, expand=True)
+        self.xba_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.xba_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
 
-        self.values_frame = Frame(right_frame, width=90, height=185, bg='grey')
-        self.values_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
+        self.ss_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.ss_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
 
-        self.entry_frame = Frame(left_frame, width=45, height=185, bg='grey')
-        self.entry_frame.pack(side='right', fill='both', padx=5, pady=5, expand=True)
+        self.xs_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.xs_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
 
-        self.define = Frame(left_frame, width=300, height=185)
-        self.define.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+        self.xp_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.xp_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.xnd_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.xnd_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.snd_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.snd_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.snh_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.snh_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.sno_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.sno_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.so_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.so_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.time_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.time_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.params_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.params_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.kla_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.kla_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.xsd_frame = Frame(self.main_frame, width=100, height=185, bg='grey')
+        self.xsd_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.xpd_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.xpd_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.xndd_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.xndd_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.ssd_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.ssd_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.sndd_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.sndd_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.snhd_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.snhd_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.snod_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.snod_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.sod_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.sod_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.qd_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.qd_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
+        self.buttons_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.buttons_frame.pack(side='left', fill='both', padx=5, pady=5, expand=False)
+
+        Label(self.xbh_frame, text="Xbh", font="none 12 bold", width=4).pack(side='left', padx=5, pady=7)
+        Label(self.xba_frame, text="Xba", font="none 12 bold", width=4).pack(side='left', padx=5, pady=7)
+        Label(self.ss_frame, text="Ss", font="none 12 bold", width=4).pack(side='left', padx=5, pady=7)
+        Label(self.xs_frame, text="Xs", font="none 12 bold", width=4).pack(side='left', padx=5, pady=7)
+        Label(self.xp_frame, text="Xp", font="none 12 bold", width=4).pack(side='left', padx=5, pady=7)
+        Label(self.xnd_frame, text="Xnd", font="none 12 bold", width=4).pack(side='left', padx=5, pady=8)
+        Label(self.snd_frame, text="Snd", font="none 12 bold", width=4).pack(side='left', padx=5, pady=7)
+        Label(self.snh_frame, text="Snh", font="none 12 bold", width=4).pack(side='left', padx=5, pady=8)
+        Label(self.sno_frame, text="Sno", font="none 12 bold", width=4).pack(side='left', padx=5, pady=7)
+        Label(self.so_frame, text="So", font="none 12 bold", width=4).pack(side='left', padx=5, pady=7)
+        Label(self.time_frame, text="krok", font="none 12 bold", width=4).pack(side='left', padx=5, pady=8)
+        Label(self.kla_frame, text="kLa", font="none 12 bold", width=4).pack(side='left', padx=5, pady=8)
+        Label(self.xsd_frame, text="Xs dopływ", font="none 12 bold", width=8).pack(side='left', padx=5, pady=8)
+        Label(self.xpd_frame, text="Xp dopływ", font="none 12 bold", width=8).pack(side='left', padx=5, pady=8)
+        Label(self.xndd_frame, text="Xnd dopływ", font="none 12 bold", width=8).pack(side='left', padx=5, pady=6)
+        Label(self.ssd_frame, text="SS dopływ", font="none 12 bold", width=8).pack(side='left', padx=5, pady=6)
+        Label(self.sndd_frame, text="Snd dopływ", font="none 12 bold", width=8).pack(side='left', padx=5, pady=8)
+        Label(self.snhd_frame, text="Snh dopływ", font="none 12 bold", width=8).pack(side='left', padx=5, pady=8)
+        Label(self.snod_frame, text="Sno dopływ", font="none 12 bold", width=8).pack(side='left', padx=5, pady=8)
+        Label(self.sod_frame, text="So dopływ", font="none 12 bold", width=8).pack(side='left', padx=5, pady=8)
+        Label(self.qd_frame, text="Natężenie przepływu", font="none 12 bold").pack(side='left', padx=5, pady=8)
 
         # initself.entry_frame
-        self.entry_value_xbh = DoubleVar(self.entry_frame, value=reactor.Xbh)
-        self.enter_xbh = Entry(self.entry_frame, textvariable=self.entry_value_xbh).pack(padx=5, pady=5)
+        self.entry_value_xbh = DoubleVar(self.xbh_frame, value=reactor.Xbh)
+        self.enter_xbh = Entry(self.xbh_frame, textvariable=self.entry_value_xbh, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_xba = DoubleVar(self.entry_frame, value=reactor.Xba)
-        self.enter_xba = Entry(self.entry_frame, textvariable=self.entry_value_xba).pack(padx=5, pady=5)
+        self.entry_value_xba = DoubleVar(self.xba_frame, value=reactor.Xba)
+        self.enter_xba = Entry(self.xba_frame, textvariable=self.entry_value_xba, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_ss = DoubleVar(self.entry_frame, value=reactor.Ss)
-        self.enter_ss = Entry(self.entry_frame, textvariable=self.entry_value_ss).pack(padx=5, pady=5)
+        self.entry_value_ss = DoubleVar(self.ss_frame, value=reactor.Ss)
+        self.enter_ss = Entry(self.ss_frame, textvariable=self.entry_value_ss, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_xs = DoubleVar(self.entry_frame, value=reactor.Xs)
-        self.enter_xs = Entry(self.entry_frame, textvariable=self.entry_value_xs).pack(padx=5, pady=5)
+        self.entry_value_xs = DoubleVar(self.xs_frame, value=reactor.Xs)
+        self.enter_xs = Entry(self.xs_frame, textvariable=self.entry_value_xs, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_xp = DoubleVar(self.entry_frame, value=reactor.Xp)
-        self.enter_xp = Entry(self.entry_frame, textvariable=self.entry_value_xp).pack(padx=5, pady=5)
+        self.entry_value_xp = DoubleVar(self.xp_frame, value=reactor.Xp)
+        self.enter_xp = Entry(self.xp_frame, textvariable=self.entry_value_xp, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_xnd = DoubleVar(self.entry_frame, value=reactor.Xnd)
-        self.enter_xnd = Entry(self.entry_frame, textvariable=self.entry_value_xnd).pack(padx=5, pady=5)
+        self.entry_value_xnd = DoubleVar(self.xnd_frame, value=reactor.Xnd)
+        self.enter_xnd = Entry(self.xnd_frame, textvariable=self.entry_value_xnd, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_snd = DoubleVar(self.entry_frame, value=reactor.Snd)
-        self.enter_snd = Entry(self.entry_frame, textvariable=self.entry_value_snd).pack(padx=5, pady=5)
+        self.entry_value_snd = DoubleVar(self.snd_frame, value=reactor.Snd)
+        self.enter_snd = Entry(self.snd_frame, textvariable=self.entry_value_snd, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_snh = DoubleVar(self.entry_frame, value=reactor.Snh)
-        self.enter_snh = Entry(self.entry_frame, textvariable=self.entry_value_snh).pack(padx=5, pady=5)
+        self.entry_value_snh = DoubleVar(self.snh_frame, value=reactor.Snh)
+        self.enter_snh = Entry(self.snh_frame, textvariable=self.entry_value_snh, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_sno = DoubleVar(self.entry_frame, value=reactor.Sno)
-        self.enter_sno = Entry(self.entry_frame, textvariable=self.entry_value_sno).pack(padx=5, pady=5)
+        self.entry_value_sno = DoubleVar(self.sno_frame, value=reactor.Sno)
+        self.enter_sno = Entry(self.sno_frame, textvariable=self.entry_value_sno, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_so = DoubleVar(self.entry_frame, value=reactor.So)
-        self.enter_so = Entry(self.entry_frame, textvariable=self.entry_value_so).pack(padx=5, pady=5)
+        self.entry_value_so = DoubleVar(self.so_frame, value=reactor.So)
+        self.enter_so = Entry(self.so_frame, textvariable=self.entry_value_so, width=10).pack(side='left', padx=5, pady=5)
 
         # czas
-        self.entry_value_time = DoubleVar(self.entry_frame, value=reactor.t[-1])
-        self.enter_time = Entry(self.entry_frame, textvariable=self.entry_value_time).pack(padx=5, pady=5)
+        self.entry_value_time = DoubleVar(self.time_frame, value=reactor.t[-1])
+        self.enter_time = Entry(self.time_frame, textvariable=self.entry_value_time, width=10).pack(side='left', padx=5, pady=5)
 
-        Label(self.entry_frame, text="Parametry dopływu", font="none 12 bold").pack(padx=5, pady=5)
+        Label(self.params_frame, text="Parametry dopływu", font="none 12 bold").pack(side='left', padx=5, pady=5)
 
         # doplyw
-        self.entry_value_kla = DoubleVar(self.entry_frame, value=reactor.kla)
-        self.enter_kla = Entry(self.entry_frame, textvariable=self.entry_value_kla).pack(padx=5, pady=5)
+        self.entry_value_kla = DoubleVar(self.kla_frame, value=reactor.kla)
+        self.enter_kla = Entry(self.kla_frame, textvariable=self.entry_value_kla, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_xsd = DoubleVar(self.entry_frame, value=reactor.Xsd)
-        self.enter_xsd = Entry(self.entry_frame, textvariable=self.entry_value_xsd).pack(padx=5, pady=5)
+        self.entry_value_xsd = DoubleVar(self.xsd_frame, value=reactor.Xsd)
+        self.enter_xsd = Entry(self.xsd_frame, textvariable=self.entry_value_xsd, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_xpd = DoubleVar(self.entry_frame, value=reactor.Xpd)
-        self.enter_xpd = Entry(self.entry_frame, textvariable=self.entry_value_xpd).pack(padx=5, pady=5)
+        self.entry_value_xpd = DoubleVar(self.xpd_frame, value=reactor.Xpd)
+        self.enter_xpd = Entry(self.xpd_frame, textvariable=self.entry_value_xpd, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_xndd = DoubleVar(self.entry_frame, value=reactor.Xndd)
-        self.enter_xndd = Entry(self.entry_frame, textvariable=self.entry_value_xndd).pack(padx=5, pady=5)
+        self.entry_value_xndd = DoubleVar(self.xndd_frame, value=reactor.Xndd)
+        self.enter_xndd = Entry(self.xndd_frame, textvariable=self.entry_value_xndd, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_ssd = DoubleVar(self.entry_frame, value=reactor.Ssd)
-        self.enter_ssd = Entry(self.entry_frame, textvariable=self.entry_value_ssd).pack(padx=5, pady=5)
+        self.entry_value_ssd = DoubleVar(self.ssd_frame, value=reactor.Ssd)
+        self.enter_ssd = Entry(self.ssd_frame, textvariable=self.entry_value_ssd, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_sndd = DoubleVar(self.entry_frame, value=reactor.Sndd)
-        self.enter_sndd = Entry(self.entry_frame, textvariable=self.entry_value_sndd).pack(padx=5, pady=5)
+        self.entry_value_sndd = DoubleVar(self.sndd_frame, value=reactor.Sndd)
+        self.enter_sndd = Entry(self.sndd_frame, textvariable=self.entry_value_sndd, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_snhd = DoubleVar(self.entry_frame, value=reactor.Snhd)
-        self.enter_snhd = Entry(self.entry_frame, textvariable=self.entry_value_snhd).pack(padx=5, pady=5)
+        self.entry_value_snhd = DoubleVar(self.snhd_frame, value=reactor.Snhd)
+        self.enter_snhd = Entry(self.snhd_frame, textvariable=self.entry_value_snhd, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_snod = DoubleVar(self.entry_frame, value=reactor.Snod)
-        self.enter_snod = Entry(self.entry_frame, textvariable=self.entry_value_snod).pack(padx=5, pady=5)
+        self.entry_value_snod = DoubleVar(self.snod_frame, value=reactor.Snod)
+        self.enter_snod = Entry(self.snod_frame, textvariable=self.entry_value_snod, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_sod = DoubleVar(self.entry_frame, value=reactor.Sod)
-        self.enter_sod = Entry(self.entry_frame, textvariable=self.entry_value_sod).pack(padx=5, pady=5)
+        self.entry_value_sod = DoubleVar(self.sod_frame, value=reactor.Sod)
+        self.enter_sod = Entry(self.sod_frame, textvariable=self.entry_value_sod, width=10).pack(side='left', padx=5, pady=5)
 
-        self.entry_value_qd = DoubleVar(self.entry_frame, value=reactor.Qd)
-        self.enter_qd = Entry(self.entry_frame, textvariable=self.entry_value_qd).pack(padx=5, pady=5)
+        self.entry_value_qd = DoubleVar(self.qd_frame, value=reactor.Qd)
+        self.enter_qd = Entry(self.qd_frame, textvariable=self.entry_value_qd, width=8).pack(side='left', padx=5, pady=5)
 
         # Labels
 
         # labels for values in real time
-        self.show_xbh = Label(self.values_frame, textvariable=self.entry_value_xbh, font="none 12 bold")
-        self.show_xbh.pack(padx=5, pady=7)
+        self.show_xbh = Label(self.xbh_frame, textvariable=self.entry_value_xbh, font="none 12 bold")
+        self.show_xbh.pack(side='left', padx=5, pady=7)
 
-        self.show_xba = Label(self.values_frame, textvariable=self.entry_value_xba, font="none 12 bold")
-        self.show_xba.pack(padx=5, pady=7)
+        self.show_xba = Label(self.xba_frame, textvariable=self.entry_value_xba, font="none 12 bold")
+        self.show_xba.pack(side='left', padx=5, pady=7)
 
-        self.show_ss = Label(self.values_frame, textvariable=self.entry_value_ss, font="none 12 bold")
-        self.show_ss.pack(padx=5, pady=7)
+        self.show_ss = Label(self.ss_frame, textvariable=self.entry_value_ss, font="none 12 bold")
+        self.show_ss.pack(side='left', padx=5, pady=7)
 
-        self.show_xs = Label(self.values_frame, textvariable=self.entry_value_xs, font="none 12 bold")
-        self.show_xs.pack(padx=5, pady=7)
+        self.show_xs = Label(self.xs_frame, textvariable=self.entry_value_xs, font="none 12 bold")
+        self.show_xs.pack(side='left', padx=5, pady=7)
 
-        self.show_xp = Label(self.values_frame, textvariable=self.entry_value_xp, font="none 12 bold")
-        self.show_xp.pack(padx=5, pady=7)
+        self.show_xp = Label(self.xp_frame, textvariable=self.entry_value_xp, font="none 12 bold")
+        self.show_xp.pack(side='left', padx=5, pady=7)
 
-        self.show_xnd = Label(self.values_frame, textvariable=self.entry_value_xnd, font="none 12 bold")
-        self.show_xnd.pack(padx=5, pady=8)
+        self.show_xnd = Label(self.xnd_frame, textvariable=self.entry_value_xnd, font="none 12 bold")
+        self.show_xnd.pack(side='left', padx=5, pady=8)
 
-        self.show_snd = Label(self.values_frame, textvariable=self.entry_value_snd, font="none 12 bold")
-        self.show_snd.pack(padx=5, pady=7)
+        self.show_snd = Label(self.snd_frame, textvariable=self.entry_value_snd, font="none 12 bold")
+        self.show_snd.pack(side='left', padx=5, pady=7)
 
-        self.show_snh = Label(self.values_frame, textvariable=self.entry_value_snh, font="none 12 bold")
-        self.show_snh.pack(padx=5, pady=8)
+        self.show_snh = Label(self.snh_frame, textvariable=self.entry_value_snh, font="none 12 bold")
+        self.show_snh.pack(side='left', padx=5, pady=8)
 
-        self.show_sno = Label(self.values_frame, textvariable=self.entry_value_sno, font="none 12 bold")
-        self.show_sno.pack(padx=5, pady=7)
+        self.show_sno = Label(self.sno_frame, textvariable=self.entry_value_sno, font="none 12 bold")
+        self.show_sno.pack(side='left', padx=5, pady=7)
 
-        self.show_so = Label(self.values_frame, textvariable=self.entry_value_so, font="none 12 bold")
-        self.show_so.pack(padx=5, pady=7)
+        self.show_so = Label(self.so_frame, textvariable=self.entry_value_so, font="none 12 bold")
+        self.show_so.pack(side='left', padx=5, pady=7)
         # czas
-        self.show_time = Label(self.values_frame, textvariable=self.entry_value_so, font="none 12 bold")
-        self.show_time.pack(padx=5, pady=8)
+        self.show_time = Label(self.time_frame, textvariable=self.entry_value_so, font="none 12 bold")
+        self.show_time.pack(side='left', padx=5, pady=8)
         # doplyw
 
-        self.show_nothing = Label(self.values_frame, text="", font="none 12 bold")
-        self.show_nothing.pack(padx=5, pady=7)
+        self.show_kla = Label(self.kla_frame, textvariable=self.entry_value_kla, font="none 12 bold")
+        self.show_kla.pack(side='left', padx=5, pady=7)
 
-        self.show_kla = Label(self.values_frame, textvariable=self.entry_value_kla, font="none 12 bold")
-        self.show_kla.pack(padx=5, pady=7)
+        self.show_xsd = Label(self.xsd_frame, textvariable=self.entry_value_xsd, font="none 12 bold")
+        self.show_xsd.pack(side='left', padx=5, pady=7)
 
-        self.show_xsd = Label(self.values_frame, textvariable=self.entry_value_xsd, font="none 12 bold")
-        self.show_xsd.pack(padx=5, pady=7)
+        self.show_xpd = Label(self.xpd_frame, textvariable=self.entry_value_xpd, font="none 12 bold")
+        self.show_xpd.pack(side='left', padx=5, pady=7)
 
-        self.show_xpd = Label(self.values_frame, textvariable=self.entry_value_xpd, font="none 12 bold")
-        self.show_xpd.pack(padx=5, pady=7)
+        self.show_xndd = Label(self.xndd_frame, textvariable=self.entry_value_xndd, font="none 12 bold")
+        self.show_xndd.pack(side='left', padx=5, pady=7)
 
-        self.show_xndd = Label(self.values_frame, textvariable=self.entry_value_xndd, font="none 12 bold")
-        self.show_xndd.pack(padx=5, pady=7)
+        self.show_ssd = Label(self.ssd_frame, textvariable=self.entry_value_ssd, font="none 12 bold")
+        self.show_ssd.pack(side='left', padx=5, pady=7)
 
-        self.show_ssd = Label(self.values_frame, textvariable=self.entry_value_ssd, font="none 12 bold")
-        self.show_ssd.pack(padx=5, pady=7)
+        self.show_sndd = Label(self.sndd_frame, textvariable=self.entry_value_sndd, font="none 12 bold")
+        self.show_sndd.pack(side='left', padx=5, pady=8)
 
-        self.show_sndd = Label(self.values_frame, textvariable=self.entry_value_sndd, font="none 12 bold")
-        self.show_sndd.pack(padx=5, pady=8)
+        self.show_snhd = Label(self.snhd_frame, textvariable=self.entry_value_snhd, font="none 12 bold")
+        self.show_snhd.pack(side='left', padx=5, pady=7)
 
-        self.show_snhd = Label(self.values_frame, textvariable=self.entry_value_snhd, font="none 12 bold")
-        self.show_snhd.pack(padx=5, pady=7)
+        self.show_snod = Label(self.snod_frame, textvariable=self.entry_value_snod, font="none 12 bold")
+        self.show_snod.pack(side='left', padx=5, pady=7)
 
-        self.show_snod = Label(self.values_frame, textvariable=self.entry_value_snod, font="none 12 bold")
-        self.show_snod.pack(padx=5, pady=7)
+        self.show_sod = Label(self.sod_frame, textvariable=self.entry_value_sod, font="none 12 bold")
+        self.show_sod.pack(side='left', padx=5, pady=7)
 
-        self.show_sod = Label(self.values_frame, textvariable=self.entry_value_sod, font="none 12 bold")
-        self.show_sod.pack(padx=5, pady=7)
-
-        self.show_qd = Label(self.values_frame, textvariable=self.entry_value_qd, font="none 12 bold")
-        self.show_qd.pack(padx=5, pady=8)
+        self.show_qd = Label(self.qd_frame, textvariable=self.entry_value_qd, font="none 12 bold")
+        self.show_qd.pack(side='left', padx=5, pady=8)
 
         # Label(define, text='Symulator', bg="black", fg="white", font="none 12 bold").pack()
-        Label(self.define, text="Xbh", font="none 12 bold").pack(padx=5, pady=7)
-        Label(self.define, text="Xba", font="none 12 bold").pack(padx=5, pady=7)
-        Label(self.define, text="Ss", font="none 12 bold").pack(padx=5, pady=7)
-        Label(self.define, text="Xs", font="none 12 bold").pack(padx=5, pady=7)
-        Label(self.define, text="Xp", font="none 12 bold").pack(padx=5, pady=7)
-        Label(self.define, text="Xnd", font="none 12 bold").pack(padx=5, pady=8)
-        Label(self.define, text="Snd", font="none 12 bold").pack(padx=5, pady=7)
-        Label(self.define, text="Snh", font="none 12 bold").pack(padx=5, pady=8)
-        Label(self.define, text="Sno", font="none 12 bold").pack(padx=5, pady=7)
-        Label(self.define, text="So", font="none 12 bold").pack(padx=5, pady=7)
-        Label(self.define, text="krok", font="none 12 bold").pack(padx=5, pady=8)
-        Label(self.define, text="", font="none 12 bold").pack(padx=5, pady=8)
-        Label(self.define, text="kLa", font="none 12 bold").pack(padx=5, pady=8)
-        Label(self.define, text="Xs dopływ", font="none 12 bold").pack(padx=5, pady=8)
-        Label(self.define, text="Xp dopływ", font="none 12 bold").pack(padx=5, pady=8)
-        Label(self.define, text="Xnd dopływ", font="none 12 bold").pack(padx=5, pady=6)
-        Label(self.define, text="SS dopływ", font="none 12 bold").pack(padx=5, pady=6)
-        Label(self.define, text="Snd dopływ", font="none 12 bold").pack(padx=5, pady=8)
-        Label(self.define, text="Snh dopływ", font="none 12 bold").pack(padx=5, pady=8)
-        Label(self.define, text="Sno dopływ", font="none 12 bold").pack(padx=5, pady=8)
-        Label(self.define, text="So dopływ", font="none 12 bold").pack(padx=5, pady=8)
-        Label(self.define, text="Natężenie przepływu", font="none 12 bold").pack(padx=5, pady=8)
+
 
         # Buttons
-        Button(self.entry_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(
+        Button(self.buttons_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(
             side='top', padx=5, pady=5)
-        Button(self.entry_frame, text="Pokaż wykres", width="15", command=lambda: self.obrazek()).pack(side='top',
+        Button(self.buttons_frame, text="Pokaż wykres", width="15", command=lambda: self.obrazek()).pack(side='top',
                                                                                                        padx=5,
                                                                                                        pady=5)
-        Button(self.entry_frame, text="Wyzeruj", width="15", command=lambda: self.wyzeruj()).pack(
+        Button(self.buttons_frame, text="Wyzeruj", width="15", command=lambda: self.wyzeruj()).pack(
             side='bottom', padx=5,
             pady=5)
 
-        Button(self.entry_frame, text="Zmień dopływ", width="15", command=lambda: self.inflow()).pack(
+        Button(self.buttons_frame, text="Zmień dopływ", width="15", command=lambda: self.inflow()).pack(
             side='top', padx=5,
             pady=5)
 
-        Button(self.entry_frame, text="Wykres osadnika", width="15", command=lambda: self.graph_settler()).pack(
+        Button(self.buttons_frame, text="Wykres osadnika", width="15", command=lambda: self.graph_settler()).pack(
             side='top', padx=5,
             pady=5)
 
@@ -538,7 +591,7 @@ class Simulator:
 
 window = Tk()
 window.maxsize(1800, 1200)
-window.configure(background="black")
+window.configure(background="grey")
 gui = Simulator(window)
 gui.main_frame.update()
 gui.label()
