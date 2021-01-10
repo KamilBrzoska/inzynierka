@@ -310,7 +310,7 @@ class Simulator:
         Button(self.buttons_frame, text="Rozpocznij symulacje", width="15",
                command=lambda: self.start_simulation()).pack(
             side='top', padx=5, pady=5)
-        Button(self.buttons_frame, text="Pokaż wykres", width="15", command=lambda: self.obrazek()).pack(side='top',
+        Button(self.buttons_frame, text="Wykres Reaktora", width="15", command=lambda: self.obrazek()).pack(side='top',
                                                                                                          padx=5,
                                                                                                          pady=5)
         Button(self.buttons_frame, text="Wyzeruj", width="15", command=lambda: self.wyzeruj()).pack(
@@ -485,7 +485,7 @@ class Simulator:
                     toolbar = NavigationToolbar2Tk(self.canvas, self.graph_frame)
                     toolbar.update()
                     self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
-                    self.canvas.tkcanvas.pack()
+                    # self.canvas.tkcanvas.pack()
 
                     self.axis = self.figure2.add_subplot(111, projection='3d')
                     self.x_data = np.array([0.1, 0.2, 0.3])
@@ -506,7 +506,7 @@ class Simulator:
                     toolbar = NavigationToolbar2Tk(self.canvas, self.graph_frame)
                     toolbar.update()
                     self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
-                    self.canvas.tkcanvas.pack()
+                    # self.canvas.tkcanvas.pack()
 
                     self.axis = self.figure2.add_subplot(111, projection='3d')
                     self.x_data = np.array([0.1, 0.2, 0.3])

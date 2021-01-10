@@ -42,7 +42,7 @@ class Reactor:
         self.Ng = 0.5  #
         self.Kno = 0.1  #
         self.Bh = 0.62  #
-        self.Ua = 0.0676  #
+        self.Ua = 2.0  #
         self.Knh = 0.109  #
         self.Koa = 0.25  #
         self.Ba = 0.0289  #
@@ -146,7 +146,7 @@ class Reactor:
         y7 = data['Snd']
         y8 = data['Snh']
         y9 = data['Sno']
-        # y10 = data['So']
+        y10 = data['So']
 
         plt.cla()
         plt.plot(x, y1, label='Xbh')
@@ -158,7 +158,7 @@ class Reactor:
         plt.plot(x, y7, label='Snd')
         plt.plot(x, y8, label='Snh')
         plt.plot(x, y9, label='Sno')
-        # plt.plot(x, y10, label='So')
+        plt.plot(x, y10, label='So')
         plt.legend(loc='upper left')
         plt.gca().xaxis.set_major_locator(mticker.MaxNLocator())
         plt.tight_layout()
