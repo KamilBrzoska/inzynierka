@@ -1,10 +1,13 @@
 import numpy as np
+from matplotlib.backends.backend_template import FigureCanvas
+from matplotlib.figure import Figure
+from mpl_toolkits.mplot3d import Axes3D
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 import pandas as pd
 import matplotlib.ticker as mticker
 from math import e
-
+from mpl_toolkits import mplot3d
 
 class Reactor:
 
@@ -143,7 +146,7 @@ class Reactor:
         y7 = data['Snd']
         y8 = data['Snh']
         y9 = data['Sno']
-        y10 = data['So']
+        # y10 = data['So']
 
         plt.cla()
         plt.plot(x, y1, label='Xbh')
@@ -155,7 +158,7 @@ class Reactor:
         plt.plot(x, y7, label='Snd')
         plt.plot(x, y8, label='Snh')
         plt.plot(x, y9, label='Sno')
-        plt.plot(x, y10, label='So')
+        # plt.plot(x, y10, label='So')
         plt.legend(loc='upper left')
         plt.gca().xaxis.set_major_locator(mticker.MaxNLocator())
         plt.tight_layout()
@@ -198,29 +201,98 @@ class Settler(Reactor):
     def graphs_settler(i):
         data = pd.read_csv('data.csv')
 
-        x = data['t']
-        y1 = data['layer1']
-        y2 = data['layer2']
-        y3 = data['layer3']
-        y4 = data['layer4']
-        y5 = data['layer5']
-        y6 = data['layer6']
-        y7 = data['layer7']
-        y8 = data['layer8']
-        y9 = data['layer9']
-        y10 = data['layer10']
+        ax = plt.axes(projection='3d')
 
-        plt.cla()
-        plt.plot(x, y1, label='warstwa 1')
-        plt.plot(x, y2, label='warstwa 2')
-        plt.plot(x, y3, label='warstwa 3')
-        plt.plot(x, y4, label='warstwa 4')
-        plt.plot(x, y5, label='warstwa 5')
-        plt.plot(x, y6, label='warstwa 6')
-        plt.plot(x, y7, label='warstwa 7')
-        plt.plot(x, y8, label='warstwa 8')
-        plt.plot(x, y9, label='warstwa 9')
-        plt.plot(x, y10, label='warstwa 10')
+        z=np.array([data['layer1'], data['layer2'], data['layer3'], data['layer4'], data['layer5'], data['layer6'],
+                    data['layer7'], data['layer8'], data['layer9'], data['layer10']])
+        x=data['t']
+        y=np.array([data['1'], data['2'], data['3'], data['4'], data['5'], data['6'], data['7'], data['8'],
+                    data['9'], data['10']])
+
+        ax.plot_surface(x,y,z)
+        ax.mouse_init()
+
+
+
+        #kilka kresek
+
+        # ax = plt.axes(projection='3d')
+        # zline1 = data["layer1"]
+        # xline1 = data['1']
+        # yline1 = data['t']
+        #
+        # zline2 = data["layer2"]
+        # xline2 = data['2']
+        # yline2 = data['t']
+        #
+        # zline3 = data["layer3"]
+        # xline3 = data['3']
+        # yline3 = data['t']
+        #
+        # zline4 = data["layer4"]
+        # xline4 = data['4']
+        # yline4 = data['t']
+        #
+        # zline5 = data["layer5"]
+        # xline5 = data['5']
+        # yline5 = data['t']
+        #
+        # zline6 = data["layer6"]
+        # xline6 = data['6']
+        # yline6 = data['t']
+        #
+        # zline7 = data["layer7"]
+        # xline7 = data['7']
+        # yline7 = data['t']
+        #
+        # zline8 = data["layer8"]
+        # xline8 = data['8']
+        # yline8 = data['t']
+        #
+        # zline9 = data["layer9"]
+        # xline9 = data['9']
+        # yline9 = data['t']
+        #
+        # zline10 = data["layer10"]
+        # xline10 = data['10']
+        # yline10 = data['t']
+        #
+        # ax.plot3D(xline1, yline1, zline1, label='warstwa1')
+        # ax.plot3D(xline2, yline2, zline2, label='warstwa2')
+        # ax.plot3D(xline3, yline3, zline3, label='warstwa3')
+        # ax.plot3D(xline4, yline4, zline4, label='warstwa4')
+        # ax.plot3D(xline5, yline5, zline5, label='warstwa5')
+        # ax.plot3D(xline6, yline6, zline6, label='warstwa6')
+        # ax.plot3D(xline7, yline7, zline7, label='warstwa7')
+        # ax.plot3D(xline8, yline8, zline8, label='warstwa8')
+        # ax.plot3D(xline9, yline9, zline9, label='warstwa9')
+        # ax.plot3D(xline10, yline10, zline10, label='warstwa10')
+
+        #stare
+
+        # x = data['t']
+        # y1 = data['layer1']
+        # y2 = data['layer2']
+        # y3 = data['layer3']
+        # y4 = data['layer4']
+        # y5 = data['layer5']
+        # y6 = data['layer6']
+        # y7 = data['layer7']
+        # y8 = data['layer8']
+        # y9 = data['layer9']
+        # y10 = data['layer10']
+        #
+        # plt.cla()
+        # plt.plot(x, y1, label='warstwa 1')
+        # plt.plot(x, y2, label='warstwa 2')
+        # plt.plot(x, y3, label='warstwa 3')
+        # plt.plot(x, y4, label='warstwa 4')
+        # plt.plot(x, y5, label='warstwa 5')
+        # plt.plot(x, y6, label='warstwa 6')
+        # plt.plot(x, y7, label='warstwa 7')
+        # plt.plot(x, y8, label='warstwa 8')
+        # plt.plot(x, y9, label='warstwa 9')
+        # plt.plot(x, y10, label='warstwa 10')
         plt.legend(loc='upper left')
         plt.gca().xaxis.set_major_locator(mticker.MaxNLocator())
         plt.tight_layout()
@@ -316,7 +388,7 @@ class Settler(Reactor):
         ss2 = ((rownania[2] * self.V) + (self.Ssd * self.Qd) - (rownania[2] * self.Qw)) / self.V
         xs2 = ((rownania[3] * self.V) + recykl[3] + (self.Xsd * self.Qd) - (rownania[3] * self.Qw)) / self.V
         xp2 = ((rownania[4] * self.V) + recykl[4] + (self.Xpd * self.Qd) - (rownania[4] * self.Qw)) / self.V
-        xnd2 = ((rownania[5] * self.V) + recykl[5] + (self.Xnd * self.Qd) - (rownania[5] * self.Qw)) / self.V
+        xnd2 = ((rownania[5] * self.V) + recykl[5] + (self.Xndd * self.Qd) - (rownania[5] * self.Qw)) / self.V
         snd2 = ((rownania[6] * self.V) + (self.Sndd * self.Qd) - (rownania[6] * self.Qw)) / self.V
         snh2 = ((rownania[7] * self.V) + (self.Snhd * self.Qd) - (rownania[7] * self.Qw)) / self.V
         sno2 = ((rownania[8] * self.V) + (self.Snod * self.Qd) - (rownania[8] * self.Qw)) / self.V

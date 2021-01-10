@@ -19,7 +19,8 @@ only_for_close_function = True
 
 def makesimulation(add_time, add_time1):
     fieldnames = ["Xbh", "Xba", "Ss", "Xs", "Xp", "Xnd", "Snd", "Snh", "Sno", "So", "t", "layer1", "layer2",
-                  "layer3", "layer4", "layer5", "layer6", "layer7", "layer8", "layer9", "layer10"]
+                  "layer3", "layer4", "layer5", "layer6", "layer7", "layer8", "layer9", "layer10", "1", "2", "3", "4",
+                  "5", "6", "7", "8", "9", "10"]
     with open('data.csv', 'w') as csv_file:
         csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         csv_writer.writeheader()
@@ -81,6 +82,17 @@ def makesimulation(add_time, add_time1):
                 "layer8": layer8,
                 "layer9": layer9,
                 "layer10": layer10,
+                "1": 1,
+                "2": 2,
+                "3": 3,
+                "4": 4,
+                "5": 5,
+                "6": 6,
+                "7": 7,
+                "8": 8,
+                "9": 9,
+                "10": 10,
+
             }
             csv_writer.writerow(info)
 

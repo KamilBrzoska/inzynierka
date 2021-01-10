@@ -1,12 +1,20 @@
 import os
 from tkinter import *
+
+import pandas as pd
+from matplotlib.figure import Figure
+from mpl_toolkits.mplot3d import Axes3D
+from sympy.physics.quantum.circuitplot import matplotlib
+
 from test import Reactor
 from test import Settler
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 import file_csv
 import _thread
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+import numpy as np
+import wykres
 
 reactor = Reactor()
 settler = Settler()
@@ -142,71 +150,92 @@ class Simulator:
 
         # initself.entry_frame
         self.entry_value_xbh = DoubleVar(self.xbh_frame, value=reactor.Xbh)
-        self.enter_xbh = Entry(self.xbh_frame, textvariable=self.entry_value_xbh, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_xbh = Entry(self.xbh_frame, textvariable=self.entry_value_xbh, width=10).pack(side='left', padx=5,
+                                                                                                 pady=5)
 
         self.entry_value_xba = DoubleVar(self.xba_frame, value=reactor.Xba)
-        self.enter_xba = Entry(self.xba_frame, textvariable=self.entry_value_xba, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_xba = Entry(self.xba_frame, textvariable=self.entry_value_xba, width=10).pack(side='left', padx=5,
+                                                                                                 pady=5)
 
         self.entry_value_ss = DoubleVar(self.ss_frame, value=reactor.Ss)
-        self.enter_ss = Entry(self.ss_frame, textvariable=self.entry_value_ss, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_ss = Entry(self.ss_frame, textvariable=self.entry_value_ss, width=10).pack(side='left', padx=5,
+                                                                                              pady=5)
 
         self.entry_value_xs = DoubleVar(self.xs_frame, value=reactor.Xs)
-        self.enter_xs = Entry(self.xs_frame, textvariable=self.entry_value_xs, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_xs = Entry(self.xs_frame, textvariable=self.entry_value_xs, width=10).pack(side='left', padx=5,
+                                                                                              pady=5)
 
         self.entry_value_xp = DoubleVar(self.xp_frame, value=reactor.Xp)
-        self.enter_xp = Entry(self.xp_frame, textvariable=self.entry_value_xp, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_xp = Entry(self.xp_frame, textvariable=self.entry_value_xp, width=10).pack(side='left', padx=5,
+                                                                                              pady=5)
 
         self.entry_value_xnd = DoubleVar(self.xnd_frame, value=reactor.Xnd)
-        self.enter_xnd = Entry(self.xnd_frame, textvariable=self.entry_value_xnd, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_xnd = Entry(self.xnd_frame, textvariable=self.entry_value_xnd, width=10).pack(side='left', padx=5,
+                                                                                                 pady=5)
 
         self.entry_value_snd = DoubleVar(self.snd_frame, value=reactor.Snd)
-        self.enter_snd = Entry(self.snd_frame, textvariable=self.entry_value_snd, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_snd = Entry(self.snd_frame, textvariable=self.entry_value_snd, width=10).pack(side='left', padx=5,
+                                                                                                 pady=5)
 
         self.entry_value_snh = DoubleVar(self.snh_frame, value=reactor.Snh)
-        self.enter_snh = Entry(self.snh_frame, textvariable=self.entry_value_snh, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_snh = Entry(self.snh_frame, textvariable=self.entry_value_snh, width=10).pack(side='left', padx=5,
+                                                                                                 pady=5)
 
         self.entry_value_sno = DoubleVar(self.sno_frame, value=reactor.Sno)
-        self.enter_sno = Entry(self.sno_frame, textvariable=self.entry_value_sno, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_sno = Entry(self.sno_frame, textvariable=self.entry_value_sno, width=10).pack(side='left', padx=5,
+                                                                                                 pady=5)
 
         self.entry_value_so = DoubleVar(self.so_frame, value=reactor.So)
-        self.enter_so = Entry(self.so_frame, textvariable=self.entry_value_so, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_so = Entry(self.so_frame, textvariable=self.entry_value_so, width=10).pack(side='left', padx=5,
+                                                                                              pady=5)
 
         # czas
         self.entry_value_time = DoubleVar(self.time_frame, value=reactor.t[-1])
-        self.enter_time = Entry(self.time_frame, textvariable=self.entry_value_time, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_time = Entry(self.time_frame, textvariable=self.entry_value_time, width=10).pack(side='left', padx=5,
+                                                                                                    pady=5)
 
         Label(self.params_frame, text="Parametry dopływu", font="none 12 bold").pack(side='left', padx=5, pady=5)
 
         # doplyw
         self.entry_value_kla = DoubleVar(self.kla_frame, value=reactor.kla)
-        self.enter_kla = Entry(self.kla_frame, textvariable=self.entry_value_kla, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_kla = Entry(self.kla_frame, textvariable=self.entry_value_kla, width=10).pack(side='left', padx=5,
+                                                                                                 pady=5)
 
         self.entry_value_xsd = DoubleVar(self.xsd_frame, value=reactor.Xsd)
-        self.enter_xsd = Entry(self.xsd_frame, textvariable=self.entry_value_xsd, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_xsd = Entry(self.xsd_frame, textvariable=self.entry_value_xsd, width=10).pack(side='left', padx=5,
+                                                                                                 pady=5)
 
         self.entry_value_xpd = DoubleVar(self.xpd_frame, value=reactor.Xpd)
-        self.enter_xpd = Entry(self.xpd_frame, textvariable=self.entry_value_xpd, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_xpd = Entry(self.xpd_frame, textvariable=self.entry_value_xpd, width=10).pack(side='left', padx=5,
+                                                                                                 pady=5)
 
         self.entry_value_xndd = DoubleVar(self.xndd_frame, value=reactor.Xndd)
-        self.enter_xndd = Entry(self.xndd_frame, textvariable=self.entry_value_xndd, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_xndd = Entry(self.xndd_frame, textvariable=self.entry_value_xndd, width=10).pack(side='left', padx=5,
+                                                                                                    pady=5)
 
         self.entry_value_ssd = DoubleVar(self.ssd_frame, value=reactor.Ssd)
-        self.enter_ssd = Entry(self.ssd_frame, textvariable=self.entry_value_ssd, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_ssd = Entry(self.ssd_frame, textvariable=self.entry_value_ssd, width=10).pack(side='left', padx=5,
+                                                                                                 pady=5)
 
         self.entry_value_sndd = DoubleVar(self.sndd_frame, value=reactor.Sndd)
-        self.enter_sndd = Entry(self.sndd_frame, textvariable=self.entry_value_sndd, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_sndd = Entry(self.sndd_frame, textvariable=self.entry_value_sndd, width=10).pack(side='left', padx=5,
+                                                                                                    pady=5)
 
         self.entry_value_snhd = DoubleVar(self.snhd_frame, value=reactor.Snhd)
-        self.enter_snhd = Entry(self.snhd_frame, textvariable=self.entry_value_snhd, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_snhd = Entry(self.snhd_frame, textvariable=self.entry_value_snhd, width=10).pack(side='left', padx=5,
+                                                                                                    pady=5)
 
         self.entry_value_snod = DoubleVar(self.snod_frame, value=reactor.Snod)
-        self.enter_snod = Entry(self.snod_frame, textvariable=self.entry_value_snod, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_snod = Entry(self.snod_frame, textvariable=self.entry_value_snod, width=10).pack(side='left', padx=5,
+                                                                                                    pady=5)
 
         self.entry_value_sod = DoubleVar(self.sod_frame, value=reactor.Sod)
-        self.enter_sod = Entry(self.sod_frame, textvariable=self.entry_value_sod, width=10).pack(side='left', padx=5, pady=5)
+        self.enter_sod = Entry(self.sod_frame, textvariable=self.entry_value_sod, width=10).pack(side='left', padx=5,
+                                                                                                 pady=5)
 
         self.entry_value_qd = DoubleVar(self.qd_frame, value=reactor.Qd)
-        self.enter_qd = Entry(self.qd_frame, textvariable=self.entry_value_qd, width=8).pack(side='left', padx=5, pady=5)
+        self.enter_qd = Entry(self.qd_frame, textvariable=self.entry_value_qd, width=8).pack(side='left', padx=5,
+                                                                                             pady=5)
 
         # Labels
 
@@ -277,13 +306,13 @@ class Simulator:
 
         # Label(define, text='Symulator', bg="black", fg="white", font="none 12 bold").pack()
 
-
         # Buttons
-        Button(self.buttons_frame, text="Rozpocznij symulacje", width="15", command=lambda: self.start_simulation()).pack(
+        Button(self.buttons_frame, text="Rozpocznij symulacje", width="15",
+               command=lambda: self.start_simulation()).pack(
             side='top', padx=5, pady=5)
         Button(self.buttons_frame, text="Pokaż wykres", width="15", command=lambda: self.obrazek()).pack(side='top',
-                                                                                                       padx=5,
-                                                                                                       pady=5)
+                                                                                                         padx=5,
+                                                                                                         pady=5)
         Button(self.buttons_frame, text="Wyzeruj", width="15", command=lambda: self.wyzeruj()).pack(
             side='bottom', padx=5,
             pady=5)
@@ -409,6 +438,29 @@ class Simulator:
         else:
             print("najpierw rozpocznij symulacje")
 
+    def _refit_artists(self):
+        self.axis.relim()
+        self.axis.autoscale_view()
+
+    def update_plot(self, _):
+        data = pd.read_csv('data.csv')
+
+        self.z = np.array(
+            [data['layer1'], data['layer2'], data['layer3'], data['layer4'], data['layer5'], data['layer6'],
+             data['layer7'], data['layer8'], data['layer9'], data['layer10']])
+        self.x = data['t']
+        self.y = np.array([data['1'], data['2'], data['3'], data['4'], data['5'], data['6'], data['7'], data['8'],
+                           data['9'], data['10']])
+        self.axis.clear()
+        self.plot = self.axis.plot_surface(self.x, self.y, self.z)
+        self.axis.set_xlabel('czas')
+        self.axis.set_ylabel('warstwa')
+        self.axis.set_zlabel('stężenie')
+
+        self.line.recache_always()
+        self._refit_artists()
+
+
     def graph_settler(self):
         if os.path.isfile("data.csv"):
             x = hasattr(self, 'figure2')
@@ -425,23 +477,48 @@ class Simulator:
 
                     self.graph_frame = Frame(window, width=400, height=400, bg='grey')
                     self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
-                    self.x = Settler.graphs_settler
-                    self.figure2 = plt.gcf()
+
+                    self.figure2 = Figure((5, 5), 100)
                     self.canvas = FigureCanvasTkAgg(self.figure2, master=self.graph_frame)
 
-                    self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
-                    self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
                     self.canvas.draw()
+                    toolbar = NavigationToolbar2Tk(self.canvas, self.graph_frame)
+                    toolbar.update()
+                    self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+                    self.canvas.tkcanvas.pack()
+
+                    self.axis = self.figure2.add_subplot(111, projection='3d')
+                    self.x_data = np.array([0.1, 0.2, 0.3])
+                    self.y_data = np.array([0.1, 0.2, 0.3])
+                    self.z_data = np.array([[0.1], [0.2], [0.3]])
+                    self.line = self.axis.plot([], [])[0]
+                    self.line.set_data(self.x_data, self.y_data)
+
+                    self.ani = FuncAnimation(self.figure2, self.update_plot, interval=100)
                 elif not x1:
                     self.graph_frame = Frame(window, width=400, height=400, bg='grey')
                     self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
-                    self.x = Settler.graphs_settler
-                    self.figure2 = plt.gcf()
+
+                    self.figure2 = Figure((5, 5), 100)
                     self.canvas = FigureCanvasTkAgg(self.figure2, master=self.graph_frame)
 
-                    self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
-                    self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
                     self.canvas.draw()
+                    toolbar = NavigationToolbar2Tk(self.canvas, self.graph_frame)
+                    toolbar.update()
+                    self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+                    self.canvas.tkcanvas.pack()
+
+                    self.axis = self.figure2.add_subplot(111, projection='3d')
+                    self.x_data = np.array([0.1, 0.2, 0.3])
+                    self.y_data = np.array([0.1, 0.2, 0.3])
+                    self.z_data = np.array([[0.1], [0.2], [0.3]])
+                    self.line = self.axis.plot([], [])[0]
+                    self.line.set_data(self.x_data, self.y_data)
+
+                    self.ani = FuncAnimation(self.figure2, self.update_plot, interval=100)
+
+
+
         else:
             print("najpierw rozpocznij symulacje")
 
@@ -460,10 +537,24 @@ class Simulator:
         if x2:
             del self.figure1
         if x3:
+            plt.clf()
+            plt.cla()
+            plt.close()
             del self.figure2
+
 
         file_csv.only_for_close_function = False
         file_csv.model.t = [0.0, 0.1]
+        file_csv.model.X1 = 0
+        file_csv.model.X2 = 0
+        file_csv.model.X3 = 0
+        file_csv.model.X4 = 0
+        file_csv.model.X5 = 0
+        file_csv.model.X6 = 0
+        file_csv.model.X7 = 0
+        file_csv.model.X8 = 0
+        file_csv.model.X9 = 0
+        file_csv.model.X10 = 0
 
         if os.path.isfile("data.csv"):
             os.remove("data.csv")
