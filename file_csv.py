@@ -5,7 +5,7 @@ import os
 import atexit
 
 model = test.Settler()
-
+czas = 1
 
 def exit_handler():
     try:
@@ -112,7 +112,7 @@ def makesimulation(add_time, add_time1):
             # wlaczyc tego printa zeby pokazywalo stezenia z reaktora
             # print(Xbh, Xba, Ss, Xs, Xp, Xnd, Snd, Snh, Sno, So, model.t)
 
-        time.sleep(1)
+        time.sleep(czas)
 
 
 atexit.register(exit_handler)

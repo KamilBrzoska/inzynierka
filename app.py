@@ -122,6 +122,9 @@ class Simulator:
         self.qd_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
         self.qd_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
 
+        self.time_interval_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
+        self.time_interval_frame.pack(side='top', fill='both', padx=5, pady=5, expand=True)
+
         self.buttons_frame = Frame(self.main_frame, width=90, height=185, bg='grey')
         self.buttons_frame.pack(side='left', fill='both', padx=5, pady=5, expand=False)
 
@@ -146,6 +149,7 @@ class Simulator:
         Label(self.snod_frame, text="Sno dopływ", font="none 12 bold", width=8).pack(side='left', padx=5, pady=8)
         Label(self.sod_frame, text="So dopływ", font="none 12 bold", width=8).pack(side='left', padx=5, pady=8)
         Label(self.qd_frame, text="Natężenie przepływu", font="none 12 bold").pack(side='left', padx=5, pady=8)
+        Label(self.time_interval_frame, text="Opóźnienie", font="none 12 bold").pack(side='left', padx=5, pady=8)
 
         # initself.entry_frame
         self.entry_value_xbh = DoubleVar(self.xbh_frame, value=reactor.Xbh)
@@ -236,6 +240,10 @@ class Simulator:
         self.enter_qd = Entry(self.qd_frame, textvariable=self.entry_value_qd, width=8).pack(side='left', padx=5,
                                                                                              pady=5)
 
+        self.entry_value_time_interval = DoubleVar(self.time_interval_frame, value=file_csv.czas)
+        self.enter_value_time_interval = Entry(self.time_interval_frame, textvariable=self.entry_value_time_interval, width=8).pack(side='left', padx=5,
+                                                                                             pady=5)
+
         # Labels
 
         # labels for values in real time
@@ -303,6 +311,9 @@ class Simulator:
         self.show_qd = Label(self.qd_frame, textvariable=self.entry_value_qd, font="none 12 bold")
         self.show_qd.pack(side='left', padx=5, pady=8)
 
+        self.show_time_interval = Label(self.time_interval_frame, textvariable=self.entry_value_time, font="none 12 bold")
+        self.show_time_interval.pack(side='left', padx=5, pady=8)
+
         # Label(define, text='Symulator', bg="black", fg="white", font="none 12 bold").pack()
 
         # Buttons
@@ -323,6 +334,8 @@ class Simulator:
         Button(self.buttons_frame, text="Wykres osadnika", width="15", command=lambda: self.graph_settler()).pack(
             side='top', padx=5,
             pady=5)
+
+        self.interval_time = file_csv.czas * 1000
 
     def start_simulation(self):
         if os.path.isfile("data.csv"):
@@ -397,6 +410,11 @@ class Simulator:
             qd1 = float(self.entry_value_qd.get())
             file_csv.model.Qd = qd1
 
+            time_interval1 = float(self.entry_value_time_interval.get())
+            file_csv.czas = time_interval1
+
+            self.interval_time = file_csv.czas * 1000
+
             file_csv.only_for_close_function = True
             _thread.start_new_thread(file_csv.makesimulation, (t, t))
 
@@ -421,7 +439,7 @@ class Simulator:
                     self.canvas = FigureCanvasTkAgg(self.figure1, master=self.graph_frame)
 
                     self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
-                    self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
+                    self.ani = FuncAnimation(plt.gcf(), self.x, interval=self.interval_time)
                     self.canvas.draw()
 
                 elif not x1:
@@ -432,7 +450,7 @@ class Simulator:
                     self.canvas = FigureCanvasTkAgg(self.figure1, master=self.graph_frame)
 
                     self.canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
-                    self.ani = FuncAnimation(plt.gcf(), self.x, interval=1000)
+                    self.ani = FuncAnimation(plt.gcf(), self.x, interval=self.interval_time)
                     self.canvas.draw()
         else:
             print("najpierw rozpocznij symulacje")
@@ -493,7 +511,7 @@ class Simulator:
                     self.line = self.axis.plot([], [])[0]
                     self.line.set_data(self.x_data, self.y_data)
 
-                    self.ani = FuncAnimation(self.figure2, self.update_plot, interval=100)
+                    self.ani = FuncAnimation(self.figure2, self.update_plot, interval=self.interval_time)
                 elif not x1:
                     self.graph_frame = Frame(window, width=600, height=400, bg='grey')
                     self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
@@ -514,7 +532,7 @@ class Simulator:
                     self.line = self.axis.plot([], [])[0]
                     self.line.set_data(self.x_data, self.y_data)
 
-                    self.ani = FuncAnimation(self.figure2, self.update_plot, interval=100)
+                    self.ani = FuncAnimation(self.figure2, self.update_plot, interval=self.interval_time)
 
 
 
@@ -590,6 +608,10 @@ class Simulator:
 
         qd1 = float(self.entry_value_qd.get())
         file_csv.model.Qd = qd1
+
+        interval_time_1 = float(self.entry_value_time_interval.get())
+        file_csv.czas = interval_time_1
+
 
     def label(self):
         pocz0 = DoubleVar()
@@ -675,6 +697,10 @@ class Simulator:
         pocz_qd = DoubleVar(value=file_csv.model.Qd)
         pocz_qd.set(round(file_csv.model.Qd, 10))
         self.show_qd.config(textvariable=pocz_qd)
+
+        pocz_int_time = DoubleVar(value=file_csv.czas)
+        pocz_int_time.set(round(file_csv.czas, 10))
+        self.show_time_interval.config(textvariable=pocz_int_time)
 
         window.after(1000, self.label)
 
