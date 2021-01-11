@@ -14,7 +14,6 @@ import _thread
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
-import wykres
 
 reactor = Reactor()
 settler = Settler()
@@ -415,7 +414,7 @@ class Simulator:
                     del self.figure2
                     self.graph_frame.destroy()
 
-                    self.graph_frame = Frame(window, width=400, height=400, bg='grey')
+                    self.graph_frame = Frame(window, width=600, height=400, bg='grey')
                     self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
                     self.x = Reactor.graphs
                     self.figure1 = plt.gcf()
@@ -426,7 +425,7 @@ class Simulator:
                     self.canvas.draw()
 
                 elif not x1:
-                    self.graph_frame = Frame(window, width=400, height=400, bg='grey')
+                    self.graph_frame = Frame(window, width=600, height=400, bg='grey')
                     self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
                     self.x = Reactor.graphs
                     self.figure1 = plt.gcf()
@@ -475,7 +474,7 @@ class Simulator:
                     del self.figure1
                     self.graph_frame.destroy()
 
-                    self.graph_frame = Frame(window, width=400, height=400, bg='grey')
+                    self.graph_frame = Frame(window, width=600, height=400, bg='grey')
                     self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
 
                     self.figure2 = Figure((5, 5), 100)
@@ -496,7 +495,7 @@ class Simulator:
 
                     self.ani = FuncAnimation(self.figure2, self.update_plot, interval=100)
                 elif not x1:
-                    self.graph_frame = Frame(window, width=400, height=400, bg='grey')
+                    self.graph_frame = Frame(window, width=600, height=400, bg='grey')
                     self.graph_frame.pack(side='right', fill='both', padx=10, pady=5, expand=True)
 
                     self.figure2 = Figure((5, 5), 100)
@@ -682,6 +681,7 @@ class Simulator:
 
 window = Tk()
 window.maxsize(1800, 1200)
+window.minsize(400, 750)
 window.configure(background="grey")
 gui = Simulator(window)
 gui.main_frame.update()
