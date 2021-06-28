@@ -1,10 +1,10 @@
-import test
+import models
 import time
 import csv
 import os
 import atexit
 
-model = test.Settler()
+model = models.Settler()
 czas = 1
 
 def exit_handler():

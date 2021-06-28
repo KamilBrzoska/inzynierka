@@ -1,13 +1,9 @@
 import os
 from tkinter import *
-
 import pandas as pd
 from matplotlib.figure import Figure
-from mpl_toolkits.mplot3d import Axes3D
-from sympy.physics.quantum.circuitplot import matplotlib
-
-from test import Reactor
-from test import Settler
+from models import Reactor
+from models import Settler
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 import file_csv
 import _thread
